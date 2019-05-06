@@ -6,17 +6,19 @@ object Expressions extends App {
   println(x)
 
   println(2 + 3 * 4)
-  // + - * / & | ^ << >> >>> (right shift with zero extension)
+  // Mathematical Expressions: + - * / & | ^ << >> >>> (right shift with zero extension)
 
   println(1 == x)
-  // == != > >= < <=
+  // Relational Expressions: == != > >= < <=
 
   println(!(1 == x))
-  // ! && ||
+  // Boolean Expressions: ! && ||
 
   var aVariable = 2
-  aVariable += 3 // also works with thq -= *= /= ..... side effects
+  aVariable += 3 // Side effects: -= *= /= , Change the value of a variable
   println(aVariable)
+
+  // Instructions (DO) vs Expressions
 
   // IF expression
   val aCondition = true
