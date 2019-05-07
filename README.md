@@ -1,4 +1,4 @@
-# Rock-the-JVM
+# Rock the JVM: Scala for begginers
 
 ## Section 1: The Absolute Scala Basics
 ### 2. Values, Variables and Types
@@ -79,3 +79,28 @@ If there's a recursive function, the compiler can't infer the return type, we mu
 ```
 
 ### 6. Recursion
+#### Tail Recursion
+A recursive function with big numbers may cause a Stack Overflow error:
+
+```scala
+  def factorial(n: Int): Int =
+    if (n <= 1) 1
+    else {
+      val result = n * factorial(n-1) // The recursive call expression is HERE
+      result // This is the last expression
+    }
+    
+  println(factorial(5000)) // --> Stack Overflow error.
+```
+
+This can be solved using **Tail Recursion**: the last expression is the recursive call:
+
+```scala
+  @tailrec
+  def factorialTailRecursion(n: Int, accumulator: BigInt): BigInt = {
+    if (n <= 1) accumulator
+    else factorialTailRecursion(n - 1, n * accumulator) // TAIL RECURSION = use recursive call as the LAST expression
+  }
+  
+  factorialTailRecursion(10000000, 1) // WORKS!
+```
