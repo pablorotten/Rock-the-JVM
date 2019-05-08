@@ -76,4 +76,17 @@ object Functions extends App {
   println(isPrime(2003))
   println(isPrime(37 * 12))
 
+  // By Daniel
+  def isPrimeDaniel(n: Int): Boolean = {
+    def isPrimeUntil(t: Int): Boolean =
+      if (t <= 1) true
+      else n % t != 0 && isPrimeUntil(t-1)
+
+    isPrimeUntil(n / 2)
+  }
+
+  println(isPrimeDaniel(37))
+  println(isPrimeDaniel(2003))
+  println(isPrimeDaniel(37 * 12))
+
 }

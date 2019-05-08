@@ -104,3 +104,22 @@ This can be solved using **Tail Recursion**: the last expression is the recursiv
   
   factorialTailRecursion(10000000, 1) // WORKS!
 ```
+
+##### Fibonacci with tail recursion
+Starts from the base case and stops when the limit (n) is reached:
+So the base case is fibonacci(3) which is 1 + 1 = 2
+
+If the user enters n = 3 which is the base case, in the first call of fiboTailrec, we already will have i = n and just return the initial last + nextToLast = 1 + 1 = 2
+If is a bigger number, just call again fiboTailrec with last + nextToLast in the first parameter and last in the second one
+```scala
+  def fibonacci(n: Int): Long = {
+    // Fibonacci: 1 1 2 3 5 8 13 21
+    @tailrec
+    def fiboTailrec(i: Int, last: Int, nextToLast: Int): Int = // last is fibonacci(n - 1), nextToLast is fibonacci(n - 2)
+    if (i >= n) last
+    else fiboTailrec(i + 1, last + nextToLast, last)
+
+    if (n <= 2) 1
+    else fiboTailrec(2, 1, 1)
+  }
+```
