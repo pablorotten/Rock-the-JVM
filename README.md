@@ -65,7 +65,6 @@ If a function has no parameters, can be called without parentheses. The compiler
   
   println(aParameterlessFunction())
   println(aParameterlessFunction)
-
 ```
 
 ### 5. Type Inference
@@ -75,7 +74,6 @@ If there's a recursive function, the compiler can't infer the return type, we mu
     if (n == 1) aString
     else aString + aRepeatedFunction(aString, n-1)
   }
-
 ```
 
 ### 6. Recursion
@@ -122,4 +120,34 @@ If is a bigger number, just call again fiboTailrec with last + nextToLast in the
     if (n <= 2) 1
     else fiboTailrec(2, 1, 1)
   }
+```
+
+### 7. Call-by-Name and Call-by-Value
+This is related to how we pass the parameters to a function
+
+#### Call by Value
+This is the most common one. It **evaluates** the parameter first and passes the value to the function
+> function(x: Int)
+
+```scala
+  def calledByValue(x: Long): Unit = {
+    println("by value: " + x) // 2. prints the same
+    println("by value: " + x) // 2. prints the same
+  }
+
+calledByValue(System.nanoTime()) // 1. Passes and evaluates the current nanoTime value
+```
+
+#### Call by Name
+Passes the expresion directly to the function without evaluating it. 
+It will be evaluated inside the function every time it's used
+> function(x: => Int)
+
+```scala
+  def calledByName(x: => Long): Unit = {
+    println("by name: " + x) // 2. Evaluates System.nanoTime() here and prints it
+    println("by name: " + x) // 3. Evaluates again System.nanoTime() here and prints something bigger
+  }
+
+calledByName(System.nanoTime()) // 1. Passes the expresion for calculating the current nanoTime
 ```
