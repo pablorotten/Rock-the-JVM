@@ -151,3 +151,18 @@ It will be evaluated inside the function every time it's used
 
 calledByName(System.nanoTime()) // 1. Passes the expresion for calculating the current nanoTime
 ```
+
+### 8. Default and Named Arguments
+
+You can set default values to any of the arguments of a function.
+You can use de default values or override them with a different value
+Also, can change the order of the arguments using their names
+```scala
+def savePicture(format: String = "jpg", width: Int = 1920, height: Int = 1080): Unit = ???
+
+savePicture() // Default values
+savePicture("bmp") // Override the value of the leading argument (format) and use the default one for the others
+savePicture(width = 800) // Override the default value of widh
+savePicture(width = 1920, format = "jpg" , height = 1080) // Override all the arguments and change the order
+```
+
