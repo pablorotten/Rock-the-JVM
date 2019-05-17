@@ -1,4 +1,23 @@
-# Rock the JVM: Scala for begginers
+# Rock the JVM: Scala for beginners
 
 ## Section 2: Object-Oriented Programming in Scala
 ### 10. Object-Oriented Basics
+Create a class with a constructor.
+* The parameters can be fields if have **val/var**
+* Internally, we can still use the constructor parameters (use **this.parameter** if necessary)
+* Can create a block {} that will be evaluated in every instantiation
+* Can create methods and override them
+* Can also override the constructor but it can only be another constructor, other code is not allowed
+
+```scala
+class Person(name: String, val age: Int = 0) {
+  val valField = 2 // field
+  var varField = "new varField"
+  val first_name = name
+
+  def greet(name: String): Unit = println(s"${this.name} says: Hi, $name") // this.name is not a class field but is still avail able with the class definition
+
+  def this(name: String) = this(name, 0) // calls main constructor
+  def this() = this("John Doe") // call previous secondary constructor
+}
+```
