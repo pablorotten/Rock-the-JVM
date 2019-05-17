@@ -166,3 +166,46 @@ savePicture(width = 800) // Override the default value of widh
 savePicture(width = 1920, format = "jpg" , height = 1080) // Override all the arguments and change the order
 ```
 
+### 9. Smart Operations on Strings
+
+**Java** utilities for Strings:
+
+```scala
+  val str: String = "Hello, I am learning Scala"
+
+  str.charAt(2) // Char at position 2
+  str.substring(7, 11) // Substring between position 7 and 10 (11 - 1)
+  str.split(" ").toList // Creates a list with the elements splitting them by the character " "
+  str.startsWith("Hello") // Checks if the evaluated String starts with the String "Hello"
+  str.replace(" ", "-") // Replaces the character " " with "-" in the whole String
+  str.toLowerCase
+  str.length
+```
+
+**Scala** utilities for Strings
+
+```scala
+  val aNumberString = "45"  
+  val aNumber = aNumberString.toInt // parses to int
+  
+  
+  val str: String = "Hello, I am learning Scala"
+  'a' +: 'a' +: aNumberString :+ 'z' :+ 'z' // = aa45zz +: prepend :+ append
+  str.reverse
+  str.take(2) // takes the n first chars of the String
+
+  // S-interpolators
+  val name = "David"
+  val age = 12
+  val greeting = s"Hello, my name is $name and I am $age years old"
+  val greeting2 = s"Hello, my name is $name and I am $age years old and I will be turning ${age + 1}" // can evaluate complex expressions between brackets ${...}
+
+  // F-interpolators
+  val speed = 1.200000056
+  val myth = f"$name can eat $speed%2.3f burgers per minute" // 1.200 burgers -->  2.2 means: Min. 2 characters and 3 decimals precision
+
+  // raw-interpoaltors
+  println(raw"This is a \n newline") // Takes the \n as a raw chars and doesn't do the new line
+  val escaped = "This is a \n newline"
+  println(raw"$escaped") // because the \n is inside a val, now this is not raw and make the new line
+```
