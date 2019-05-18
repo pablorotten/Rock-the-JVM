@@ -1,23 +1,74 @@
 # Rock the JVM: Scala for beginners
 
 ## Section 2: Object-Oriented Programming in Scala
-### 10. Object-Oriented Basics
-Create a class with a constructor.
-* The parameters can be fields if have **val/var**
-* Internally, we can still use the constructor parameters (use **this.parameter** if necessary)
-* Can create a block {} that will be evaluated in every instantiation
-* Can create methods and override them
-* Can also override the constructor but it can only be another constructor, other code is not allowed
+### 10. 11. Object-Oriented Basics
+#### Creating a class
+* The constructor **parameters** can be **fields** if they have **val/var**
+* Can create a **block {...}** that will be evaluated in every instantiation
+* Access to params, fields and methods:
+    * Can access to **methods** and **fields** using their names
+        * Fields don't need getter/setter methods
+        * Methods without parameters can be accessed without parenthesis()
+    * Can't access to the **parameters** if they are not **fields**
+    * Internally, we can still access to the **parameters** (use **this.parameter** if necessary)
+    
+```scala
+class Class(parameter: String, val field1: Int = 0) {
+  val field2 = field1 + 1
+  var field3 = parameter
+  // this.parameter is not a class field but is still available inside the class
+  def method(parameter: String): Unit = println(s"Class parameter: ${this.parameter} Method param: $parameter")
+  // this,parameter needs a getter to be accessed.
+  // It would be better to just make parameter a field: val parameter
+  def getConstructorParam = parameter 
+}
+// Using the Class
+val clazz = new Class("param", 31)
+clazz.field1 //accessing to constructor field
+clazz.field2 //accessing to class field 
+clazz.parameter // Error: parameter is class parameter not field
+clazz.getConstructorParam //accessing to class parameter through getter
+clazz.method("other param")
+```
+
+#### Overriding
+* Can override methods and the constructor
+* The constructor can only be overriden by another constructor, a different code is not allowed
 
 ```scala
-class Person(name: String, val age: Int = 0) {
-  val valField = 2 // field
-  var varField = "new varField"
-  val first_name = name
+class Class(parameter: String, val field1: Int = 0) {
+  var field2 = parameter
+  // Overriding constructor
+  def this(otherParameter: String) = this(parameter, 1) // calls main constructor with 'otherParameter' and '1'
+  def this() = this("Second constructor") // calls secondary constructor
+  
+  // Overriding methods
+  def method(): Unit = println(s"Class parameter: ${parameter}")
+  def method(parameter: String): Unit = println(s"Class parameter: ${this.parameter} Method param: $parameter")
+}
+  val clazz1 = new Class("Using second constructor")// using second constructor
+  val clazz2 = new Class()// using third constructor
+  clazz2.method("Using overridden method")
+```
+#### Good practices: Immutability and DRY
+* **Immutability** is when, instead of changing the instance, return a new instance with the new values
+* **DRY** in this case means, that if you override any method, try to use recursion instead repeating the same as the overridden one
 
-  def greet(name: String): Unit = println(s"${this.name} says: Hi, $name") // this.name is not a class field but is still avail able with the class definition
-
-  def this(name: String) = this(name, 0) // calls main constructor
-  def this() = this("John Doe") // call previous secondary constructor
+```scala
+class Person(val name: String, var age: Int) {
+  // Gets 1 year older
+  def getOlderMutable = age = age + 1 // Side effect: changes the field 'age' of the Instance
+  def getOlder = new Person(name, age + 1) // Immutable: creates a new Instance with the new 'age'
+  // Gets 'age' years older
+  // DRY: Overrides getOlder to get 'yearsOld' older but using the overridden function => DRY
+  def getOlder(yearsOld: Int): Person = {
+    if (yearsOld <= 0) this
+    // 1st 'getOlder' calls the overridden method and returns 1 years older Person
+    // 2nd 'getOlder' makes the recursive call but with 1 year less
+    else getOlder.getOlder(yearsOld - 1) 
+  }
+  // Not DRY: Creates a new Person again like the overridden method
+  // Note: yearsOld should be Int
+  def getOlder(yearsOld: Double): Person = new Person(name, age + yearsOld.toInt)
 }
 ```
