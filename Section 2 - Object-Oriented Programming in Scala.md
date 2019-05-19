@@ -72,3 +72,81 @@ class Person(val name: String, var age: Int) {
   def getOlder(yearsOld: Double): Person = new Person(name, age + yearsOld.toInt)
 }
 ```
+
+### 12. Syntactic Sugar: Method Notations
+#### "Operators" in Scala
+In Scala, we can use use spaces instead of dots and parenthesis for calling fields or methods with 0 or 1 parameters.
+```scala
+val object = new Class(...)
+object field // = object.field
+object method // = object.method
+object method parameter // = object.method(parameter)
+```
+
+##### Infix notation
+In the case of methods with 1 parameter, the method acts like an operator because it's between 2 things and yields a 3rd thing.
+```scala
+val result = object method parameter // = object.method(parameter)
+```
+
+In a sum we have thing1 + thing2 = result. So the operator '+' is between 'thing1' and 'thing2' and yields 'resut'
+In fact, the operator '+' is and can be used like a method:
+```scala
+1 + 2
+1.+(2)
+```
+ALL OPERATORS ARE METHODS
+
+We can also define the operator '+' between to objects
+```scala
+class Person(val name: String, val age: Int) { // created inside the object to avoid conflicts with the other Person in the same package
+  def +(person: Person): String = s"${this.name} is with ${person.name}"
+}
+
+val joe = new Person("Joe", 15)
+val anne = new Person("Anne", 16)
+joe + anne // returns "Joe is with Anne"
+```
+
+##### Postfix notation
+In the case of fields and methods with 0 parameters, they act like postfix operators
+```scala
+val joe = new Person("Joe", 15)
+joe name // = joe.name
+"45" toInt // = "45".toInt()
+```
+
+##### Prefix notation and unary operators
+An unary operator is an operator that is applied to 1 thing and yields a 2nd thing
+The only ones we have in Scala are: - + ~ !
+Those are also methods, and can be called using **.unary_** and the symbol
+```scala
+val x = -1 // The unary operator '-' is applied to '1' and returns '-1'
+val x1 = !true // '!' is applied to 'true' and returns 'false'
+val y = 1.unary_- // = -1
+val y1 = true.unary_! // = !true
+```
+
+We can also override them in a Class
+```scala
+class Person(val name: String, val age: Int) { // created inside the object to avoid conflicts with the other Person in the same package
+  def unary_! = s"$name is not a Person"
+}
+
+val joe = new Person("Joe", 15)
+!joe // returns "Joe is not a Person"
+joe.unary_! // = !joe
+```
+
+#### Method apply()
+If we define in a class the method apply, in can be called adding parenthesis to the object: **object()**
+```scala
+class Class(val field: String) {
+def apply(): String = s"This is the apply method of $field"
+}
+val object1 = new Class("Object 1")
+object1.apply() // = "This is the apply method of Object 1"
+object1 apply()
+object1() // Just the object with parenthesis
+```
+This is very helpful because allows us to treat object in a functional way!
