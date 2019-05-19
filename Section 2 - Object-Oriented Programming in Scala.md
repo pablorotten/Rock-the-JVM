@@ -99,7 +99,7 @@ ALL OPERATORS ARE METHODS
 
 We can also define the operator '+' between to objects
 ```scala
-class Person(val name: String, val age: Int) { // created inside the object to avoid conflicts with the other Person in the same package
+class Person(val name: String, val age: Int) {
   def +(person: Person): String = s"${this.name} is with ${person.name}"
 }
 
@@ -129,7 +129,7 @@ val y1 = true.unary_! // = !true
 
 We can also override them in a Class
 ```scala
-class Person(val name: String, val age: Int) { // created inside the object to avoid conflicts with the other Person in the same package
+class Person(val name: String, val age: Int) {
   def unary_! = s"$name is not a Person"
 }
 
