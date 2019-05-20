@@ -142,7 +142,7 @@ joe.unary_! // = !joe
 If we define in a class the method apply, in can be called adding parenthesis to the object: **object()**
 ```scala
 class Class(val field: String) {
-def apply(): String = s"This is the apply method of $field"
+  def apply(): String = s"This is the apply method of $field"
 }
 val object1 = new Class("Object 1")
 object1.apply() // = "This is the apply method of Object 1"
