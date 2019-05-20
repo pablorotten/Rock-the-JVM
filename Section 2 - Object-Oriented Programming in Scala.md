@@ -67,13 +67,13 @@ class Person(val name: String, var age: Int) {
     // 2nd 'getOlder' makes the recursive call but with 1 year less
     else getOlder.getOlder(yearsOld - 1) 
   }
-  // Not DRY: Creates a new Person again like the overridden method
+  // Doesn't respect DRY: Creates a new Person again like the overridden method
   // Note: yearsOld should be Int
   def getOlder(yearsOld: Double): Person = new Person(name, age + yearsOld.toInt)
 }
 ```
 
-### 12. Syntactic Sugar: Method Notations
+### 12. 13. Syntactic Sugar: Method Notations
 #### "Operators" in Scala
 In Scala, we can use use spaces instead of dots and parenthesis for calling fields or methods with 0 or 1 parameters.
 ```scala
@@ -113,8 +113,10 @@ In the case of fields and methods with 0 parameters, they act like postfix opera
 ```scala
 val joe = new Person("Joe", 15)
 joe name // = joe.name
+joe learnsScala // calls the joe.learnsScala method
 "45" toInt // = "45".toInt()
 ```
+Not very used because may cause confusion reading code!!
 
 ##### Prefix notation and unary operators
 An unary operator is an operator that is applied to 1 thing and yields a 2nd thing

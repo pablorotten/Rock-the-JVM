@@ -57,4 +57,40 @@ object MethodNotations extends App{
   // apply
   println(mary.apply())
   println(mary()) // equivalent
+  /*
+
+    EXERCISES
+
+    1.  Overload the + operator
+        mary + "the rockstar" => new person "Mary (the rockstar)"
+
+    2.  Add an age to the Person class
+        Add a unary + operator => new person with the age + 1
+        +mary => mary with the age incrementer
+
+    3.  Add a "learns" method in the Person class => "Mary learns Scala"
+        Add a learnsScala method, calls learns method with "Scala".
+        Use it in postfix notation.
+
+    4.  Overload the apply method
+        mary.apply(2) => "Mary watched Inception 2 times"
+   */
+  class PersonExercise(val name: String, val age: Int = 0, favoriteMovie: String) {
+    def +(person: Person): String = s"${this.name} is hanging out with ${person.name}"
+    def +(nickname: String): PersonExercise = new PersonExercise(s"$name ($nickname)", age, favoriteMovie)
+    def unary_+ : PersonExercise = new PersonExercise(name, age + 1, favoriteMovie)
+    def learns(subject: String): String = s"$name is learning $subject"
+    def learnsScala: String = learns("Scala")
+    def apply(): String = s"Hi, my name is $name, I am $age years old and I like $favoriteMovie"
+    def apply(times: Int): String = s"$name watched $favoriteMovie $times times"
+  }
+
+  val elizabeth = new PersonExercise("Elizabeth", 15, "They live")
+  println((elizabeth + "the rockstar")())
+  println((+elizabeth)())
+  println((elizabeth.learns("English")))
+  println(elizabeth learnsScala)
+  println(elizabeth(2))
+
+
 }
