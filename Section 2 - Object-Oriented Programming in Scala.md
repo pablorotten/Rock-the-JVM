@@ -193,25 +193,25 @@ The purpose of this is to have the static/class-level functionality in the **Obj
 
 This is a **Companion**:
 ```scala
-  object Person {
-    // 'static'/'class'-level functionality
-    val NUMBER_OF_EYES = 2
-    def canFly: Boolean = false
-  }
+object Person {
+  // 'static'/'class'-level functionality
+  val NUMBER_OF_EYES = 2
+  def canFly: Boolean = false
+}
 
-  class Person(val name: String) {
-    // instance-level functionality
-    def getName: String = name
-  }
-  
-  val mary = Person // Points to the Object Instance Person
-  val eli = new Person("Elisabeth") // Creates a new Instance from the class Person 
-  
-  mary.canFly // = 2
-  mary.getName // Error: The Object cannot access to a instance-level Method
-  
-  eli.canFly // Error: The Instance cannot access to a class-level Method
-  eli.getName // = 0
+class Person(val name: String) {
+  // instance-level functionality
+  def getName: String = name
+}
+
+val mary = Person // Points to the Object Instance Person
+val eli = new Person("Elisabeth") // Creates a new Instance from the class Person 
+
+mary.canFly // = 2
+mary.getName // Error: The Object cannot access to a instance-level Method
+
+eli.canFly // Error: The Instance cannot access to a class-level Method
+eli.getName // = 0
 ```
 
 #### Factory Method
