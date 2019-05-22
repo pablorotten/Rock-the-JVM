@@ -152,3 +152,113 @@ object1 apply()
 object1() // Just the object with parenthesis
 ```
 This is very helpful because allows us to treat object in a functional way!
+
+### 14. Scala Objects
+#### Class level functionality
+Methods and attributes that belong to the class not to the Oject. 
+The **'static'** in Java, we access to the Class not to the Instance (or Object)
+
+In java:
+```java
+class Person { 
+  public static final int NUMBER_OF_EYES = 2;
+}
+Person.NUMBER_OF_EYES // Returns 2, no need to instantiate the class
+```
+
+Scala **DOES NOT HAVE** Class-Level Functionality --> NO CONCEPT OF 'static'.
+The equivalent is using **OBJECTS**
+```scala
+object Person {
+  val NUMBER_OF_EYES = 2
+  def canFly: Boolean = false
+}
+Person.NUMBER_OF_EYES // = 2
+Person.canFly // = false
+```
+
+#### Singleton
+Objects in scala are also **Singletons** by definition. There's only 1 instance per **Object**
+```scala
+val mary = Person // Doesn't create a new Instance, just makes the val mary point to the instance/object Person
+val john = Person
+println(mary == john) // true, the same instance/object
+
+val eli = new Person // Error: Cannot resolve symbol Person
+```
+
+#### Companions
+The Companion Pattern in Scala is an object and a class with same **scope** and same **name**.
+The purpose of this is to have the static/class-level functionality in the **Object** and the instance-level functionality in the **Class**
+
+This is a **Companion**:
+```scala
+  object Person {
+    // 'static'/'class'-level functionality
+    val NUMBER_OF_EYES = 2
+    def canFly: Boolean = false
+  }
+
+  class Person(val name: String) {
+    // instance-level functionality
+    def getName: String = name
+  }
+  
+  val mary = Person // Points to the Object Instance Person
+  val eli = new Person("Elisabeth") // Creates a new Instance from the class Person 
+  
+  mary.canFly // = 2
+  mary.getName // Error: The Object cannot access to a instance-level Method
+  
+  eli.canFly // Error: The Instance cannot access to a class-level Method
+  eli.getName // = 0
+```
+
+#### Factory Method
+This pattern is implemented with a method whose purpose is **generate instances** of a class using the given parameters
+In Scala we do it using the **apply()** method in the **Object Companion** and generating instances of the **Class Companion**:
+
+```scala
+object Person {
+  // Generates new Instances of the Class Person
+  def apply(mother: Person, father: Person): Person = new Person("Bobbie")
+}
+
+class Person(val name: String) {
+  def getName: String = name
+}
+
+val mary = new Person("Mary")
+val john = new Person("John")
+
+// Using factory method of Object Person
+val bobbie = Person(mary, john)
+```
+
+#### Main method
+The JVM needs the main function as entry point.
+In java we have the `'static void main(String args[])'` method:
+```java
+public class JavaApp {
+  public static void main(String args[]) {
+    // your code here
+  }
+}
+```
+If we translate this to Scala, the main function would be like this:
+```scala
+object ScalaApp{
+  def main(args: Array[String]): Unit = {
+    // your code here
+  }
+}
+```
+* object = static
+* Unit = void
+
+We can also just extend App and then the object will have implicit the main method
+```scala
+object ScalaApp extends App {
+  // your code here
+}
+```
