@@ -262,3 +262,71 @@ object ScalaApp extends App {
   // your code here
 }
 ```
+
+### 15. Inheritance
+```scala
+class Animal { 
+  def eat = println("nom")
+}
+
+class Cat extends Animal {
+  override def eat = println("slurp slurp slurp")
+}
+```
+#### Access modifiers
+* **def** method: Can be accessed everywhere
+* **private def** method: Can only accessed by the Class in Class level
+* **protected def** method: Can be accessed by the Class and Subclasses in Class level
+* **final def/class**: Can't be overridden
+* **sealed def/class**: Can be **only** overridden in the current file
+
+#### Constructor
+If the SuperClass has a constructor, we need to call it the SubClass definition
+```scala
+class Person(name: String, age: Int) { // Person class with Constructor
+  def this(name: String) = this(name, 0) // Secondary constructor
+}
+// Adult needs to call the Person constructor
+class Adult(name: String, age: Int, idCard: String) extends Person(name, age)
+// Adult1 is using the secondary constructor 
+class Adult1(name: String, age: Int, idCard: String) extends Person(name) 
+```
+#### Overriding
+We can override public and protected methods and attributes of the SuperClass.
+We can also call the public and protected methods of the SuperClass with **super**
+```scala
+
+class Animal { 
+  val creatureType = "wild"
+  
+  protected def eat1 = println("nom") 
+  def eat2 = println("nomnom")
+}
+
+// Overriding Animal 'creatureType' attribute in the constructor
+class Dog(override val creatureType: String = "domestic") extends Animal { 
+  // Overriding public and protected methods of Animal
+  override def eat1 = println("crunch crunch")
+  override def eat2 = {
+    super.eat1 // calling the superClass method, in this case Animal eat3
+    println("crunch crunch crunch")
+  }
+}
+// Overriding Animal attribute in the class definition using a parameter
+class Dog1(dogType: String = "domestic") extends Animal {
+  override val creatureType = dogType  
+}
+```
+#### Polymorphism
+Declare a SuperClass type but save a SubClass inside.
+This is correct because a SubClass will always be compatible the SuperClass type.
+We can only call the available SuperClass methods and attributes, but we are going to use the overridden implementations in the SubClass (if any)
+
+```scala
+val unknownAnimal: Animal = new Dog("K9")
+val unknownAnimal1: Animal = new Cat()
+// unknownAnimal is an Animal and a Dog. So we can call the Animal method 'eat' but it will use the overridden Dog implementation
+unknownAnimal.eat 
+// this unknownAnimal is a Cat, will call the Cat 'eat' implementation
+unknownAnimal1.eat 
+```
