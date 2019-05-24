@@ -1,6 +1,6 @@
 package lectures.part2oop
 
-object InheritanceAndTraits extends App {
+object Inheritance extends App {
 
   // single class inheritance
   sealed class Animal { // Sealed means that this class can be only overridden in this FILE

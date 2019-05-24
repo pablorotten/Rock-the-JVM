@@ -330,3 +330,48 @@ unknownAnimal.eat
 // this unknownAnimal is a Cat, will call the Cat 'eat' implementation
 unknownAnimal1.eat 
 ```
+
+### 16. Inheritance, Continued: Abstract Classes and Traits
+A **Class** can extend only one **SuperClass**, but can extend multiple **Traits**.
+Scala is **Single-Class inheritance** but **Multiple-Traits inheritance**
+
+If a class overrides an attribute or a method, don't need to use the **'override'** keyword unless the overridden
+attribute/method was already defined in the SuperClass or Trait
+```scala
+// abstract class
+abstract class AbstractClass {
+  val attribute1: String
+  val attribute2: String = "Attribute 2"
+  def method: Unit
+}
+
+// traits
+trait Trait1 {
+  def method(animal: AbstractClass): Unit
+  val traitAttribute: String = "Trait Attribute"
+}
+
+trait Trait2
+
+class Class extends AbstractClass with Trait1 with Trait2 {
+  val attribute1: String = "Overridden Attribute 1"
+  // NEEDS the 'override' because attribute2 is already defined in AbstractClass
+  override val attribute2: String = "Overridden Attribute 2" 
+  def method: Unit = println("Overridden AbstractClass Method")
+  def method(animal: AbstractClass): Unit = println(s"Overridden Trait1 Method")
+}
+```
+
+#### Difference between Traits and Abstract Class
+* Traits do not have constructor parameters
+* Multiple Traits may be inherited by the same Class, but only can extend 1 Abstract class
+* Traits = Behaviors, Abstract = "Thing"
+
+#### Scala's Type Hierarchy
+
+* **scala.Any**: The mother of all types
+  * **scala.AnyRef** (java.lang.Object): String, List, Set... also the Plain Classes we use like Person
+    * **scala.Null**: Extends everything of scala.AnyRef. You can replace any AnyRef wit Null
+  * **scala.AnyVal**: Int, Unit, Boolean... All the Primitive values of Scala
+* **scala.Nothing**: Is a subtype of **EVERYTHING** in Scala. Nothing can replace Everything. Means no Instance of anything at all
+   
