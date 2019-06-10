@@ -375,3 +375,78 @@ class Class extends AbstractClass with Trait1 with Trait2 {
   * **scala.AnyVal**: Int, Unit, Boolean... All the Primitive values of Scala
 * **scala.Nothing**: Is a subtype of **EVERYTHING** in Scala. Nothing can replace Everything. Means no Instance of anything at all
    
+### 18. Generics
+Sometimes you want to create a new class or function that uses a parameter. But are not really
+interested with the **parameter type** just use a generic one, or even, be able to define 
+rules about it.
+For that are the **Generics**
+
+A class with two Generics parameters **Key** and **Value**, also with made up names
+```scala
+class MyMap[Key, Value]
+class GenericClass[qwerty, asdfg]
+```
+With functions:
+```scala
+object MyListExample {
+  def empty[A]: MyListExample[A] = ???
+}
+val emptyListOfIntegers = MyListExample.empty[Int]
+```
+#### Variance types
+We can define some rules about those **Generic Parameteres**
+##### Covariance
+Accepts the class A any subclass of A
+```scala
+class CovariantList[+A]
+val animal: Animal = new Cat
+val animalList: CovariantList[Animal] = new CovariantList[Cat]
+```
+##### Invariance
+Only accepts the class A
+```scala
+class InvariantList[A]
+val invariantAnimalList: InvariantList[Animal] = new InvariantList[Animal]
+```
+##### Contravariance
+Only accepts A and superclass of A
+```scala
+class ContravariantList[-A]
+val contravariantList: ContravariantList[Cat] = new ContravariantList[Animal]
+```
+##### Bounded types
+Restrict only **Subtypes** or **Supertypes** of certain class
+```scala
+class Clase
+class BoundedSub[A <: Clase](instance: A) // only accepts subtypes of Clase
+class BoundedSuper[A >: Clase](instance: A) // supertypes of Clase
+
+val bounded = new BoundedSub(new Clase)
+```
+
+##### Covariance + Bounded types
+Poblem: Can we add Dogs in a Covariant list of Cats? 
+```scala
+animalList.add(new Dog)
+```
+In other words: How to define a covariant list of A that accepts different subclasses of 
+A at the same time.
+
+If A is subclass of B:
+* **Covariant List class of A** 
+* Method add that accepts **B** which is Superclass of **A**
+  * If adds **A**, return MyListCovariance[A] 
+  * If adds **B** or any other subclass of **B** like **C**: return MyListCovariance[B]
+    Since added something different than A, will always return MyListCovariance[B]
+```scala
+class MyListCovariance[+A] {
+  def add[B >: A](element: B): MyListCovariance[B] = ???
+}
+
+val michu: Cat = new Cat
+val fray: Dog = new Dog
+val monchito: Cat = new Cat
+val catList = new MyListCovariance[Cat].add(michu) // List of cat
+val animalList1 = catList.add(fray) // List of cat + dog = List of Animals
+val animalList2 = animalList1.add(monchito) // List of cat + dog + cat = still List of Animals
+```
