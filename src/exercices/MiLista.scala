@@ -64,35 +64,45 @@ object TestMiListaInt extends App{
   *
   * Make MyInyList Generic
   */
-abstract class MiGenericLista {
-  def head: Int
-  def tail: MiGenericLista
+abstract class MiGenericLista[+A] {
+  def head: A
+  def tail: MiGenericLista[A]
   def isEmpty: Boolean
-  def add(element: Int): MiGenericLista
+  def add[B >: A](element: B): MiGenericLista[B]
   def printElements: String
   override def toString: String = "[" + printElements + "]"
 }
 
-object EmptyGenericLista extends MiGenericLista {
-  def head: Int = throw new NoSuchElementException
-  def tail: MiGenericLista = throw new NoSuchElementException
+/**
+  * Any is Supertype of Everything, so we are starting from the top. If we use 'Any' for the Empty list,
+  * the List will be always a list of 'Any'. This will work but is not very precise.
+  *
+  * It's better to use 'Nothing'. So the list will be a list of the lowest Supertype that is needed
+  */
+object EmptyGenericLista extends MiGenericLista[Any] {
+  def head: Any = throw new NoSuchElementException
+  def tail: MiGenericLista[Any] = throw new NoSuchElementException
   def isEmpty: Boolean = true
-  def add(element: Int): MiGenericLista = new ConsGenericLista(element, EmptyGenericLista)
+  def add[B >: Any](element: B): MiGenericLista[B] = new ConsGenericLista(element, this)
   override def printElements: String = ""
 }
 
-class ConsGenericLista(h: Int, t: MiGenericLista) extends MiGenericLista {
-  def head: Int = h
-  def tail: MiGenericLista = t
+class ConsGenericLista[+A](h: A, t: MiGenericLista[A]) extends MiGenericLista[A] {
+  def head: A = h
+  def tail: MiGenericLista[A] = t
   def isEmpty: Boolean = false
-  def add(element: Int): MiGenericLista = new ConsGenericLista(element, this)
+  def add[B >: A](element: B): MiGenericLista[B] = new ConsGenericLista(element, this)
   override def printElements: String =
     if (t.isEmpty) "" + h
     else h + " " + t.printElements
 }
 
-object TestMiGenericLista extends App{
-  val list = new ConsGenericLista(1, new ConsGenericLista(2, new ConsGenericLista(3, EmptyGenericLista)))
-  println(list)
-  println(list.add(0))
+object TestMiGenericLista extends App {
+  // The list is always a ConsGenericLista[Any] since EmptyGenericLista is a list of Any
+  val intList = new ConsGenericLista(3, new ConsGenericLista(2, new ConsGenericLista(1, EmptyGenericLista)))
+  val longList = intList.add(4L)
+  val doubleList = longList.add(5.0)
+  val anyValList = doubleList.add(true)
+  val anyList = anyValList.add("Seven")
+  println(anyList)
 }

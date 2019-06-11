@@ -379,7 +379,7 @@ interested with the **parameter type** just use a generic one, or even, be able 
 rules about it.
 For that are the **Generics**
 
-A class with two Generics parameters **Key** and **Value**, also with made up names
+A class with two Generics parameters **Key** and **Value**, you can name them whatever you want
 ```scala
 class MyMap[Key, Value]
 class GenericClass[qwerty, asdfg]
