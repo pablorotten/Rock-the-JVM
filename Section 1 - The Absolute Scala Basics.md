@@ -1,10 +1,9 @@
 # Rock the JVM: Scala for beginners
+# Section 1: The Absolute Scala Basics
+## 2. Values, Variables and Types
+## 3. Expressions
 
-## Section 1: The Absolute Scala Basics
-### 2. Values, Variables and Types
-### 3. Expressions
-
-#### Instructions vs Expressions
+### Instructions vs Expressions
 
 **Instruction** are executed. Is something that you tell the computer to do: change a variable, print to the console.
 **Expressions** are evaluated to a value and they have a type:
@@ -35,7 +34,7 @@ Only things like a definition of a val, a class, a package are **Instructions**.
   println(1 == x)
 ```
 
-#### Expressions and Side effects
+### Expressions and Side effects
 
 **Side effects**: Expressions that change the value of a variable
 
@@ -57,7 +56,7 @@ Re-assigning 3 to the var aVariable is an **Expression** of type Unit which has 
 
 This kind of **Expressions** are **Side effects** because they change the value of a variable.
 
-### 4. Functions
+## 4. Functions
 
 If a function has no parameters, can be called without parentheses. The compiler will give us a warning
 ```scala
@@ -67,7 +66,7 @@ If a function has no parameters, can be called without parentheses. The compiler
   println(aParameterlessFunction)
 ```
 
-### 5. Type Inference
+## 5. Type Inference
 If there's a recursive function, the compiler can't infer the return type, we must specify it
 ```scala
   def aRepeatedFunction(aString: String, n: Int) = {
@@ -76,8 +75,8 @@ If there's a recursive function, the compiler can't infer the return type, we mu
   }
 ```
 
-### 6. Recursion
-#### Tail Recursion
+## 6. Recursion
+### Tail Recursion
 A recursive function with big numbers may cause a Stack Overflow error:
 
 ```scala
@@ -103,7 +102,7 @@ This can be solved using **Tail Recursion**: the last expression is the recursiv
   factorialTailRecursion(10000000, 1) // WORKS!
 ```
 
-##### Fibonacci with tail recursion
+#### Fibonacci with tail recursion
 Starts from the base case and stops when the limit (n) is reached:
 So the base case is fibonacci(3) which is 1 + 1 = 2
 
@@ -122,10 +121,10 @@ If is a bigger number, just call again fiboTailrec with last + nextToLast in the
   }
 ```
 
-### 7. Call-by-Name and Call-by-Value
+## 7. Call-by-Name and Call-by-Value
 This is related to how we pass the parameters to a function
 
-#### Call by Value
+### Call by Value
 This is the most common one. It **evaluates** the parameter first and passes the value to the function
 > function(x: Int)
 
@@ -138,7 +137,7 @@ This is the most common one. It **evaluates** the parameter first and passes the
 calledByValue(System.nanoTime()) // 1. Passes and evaluates the current nanoTime value
 ```
 
-#### Call by Name
+### Call by Name
 Passes the expresion directly to the function without evaluating it. 
 It will be evaluated inside the function every time it's used
 > function(x: => Int)
@@ -152,7 +151,7 @@ It will be evaluated inside the function every time it's used
 calledByName(System.nanoTime()) // 1. Passes the expresion for calculating the current nanoTime
 ```
 
-### 8. Default and Named Arguments
+## 8. Default and Named Arguments
 
 You can set default values to any of the arguments of a function.
 You can use de default values or override them with a different value
@@ -166,7 +165,7 @@ savePicture(width = 800) // Override the default value of widh
 savePicture(width = 1920, format = "jpg" , height = 1080) // Override all the arguments and change the order
 ```
 
-### 9. Smart Operations on Strings
+## 9. Smart Operations on Strings
 
 **Java** utilities for Strings:
 

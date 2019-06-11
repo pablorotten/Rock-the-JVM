@@ -1,8 +1,7 @@
 # Rock the JVM: Scala for beginners
-
-## Section 2: Object-Oriented Programming in Scala
-### 10. 11. Object-Oriented Basics
-#### Creating a class
+# Section 2: Object-Oriented Programming in Scala
+## 10. 11. Object-Oriented Basics
+### Creating a class
 * The constructor **parameters** can be **fields** if they have **val/var**
 * Can create a **block {...}** that will be evaluated in every instantiation
 * Access to params, fields and methods:
@@ -31,7 +30,7 @@ clazz.getConstructorParam //accessing to class parameter through getter
 clazz.method("other param")
 ```
 
-#### Overriding
+### Overriding
 * Can override methods and the constructor
 * The constructor can only be overriden by another constructor, a different code is not allowed
 
@@ -50,7 +49,7 @@ class Class(parameter: String, val field1: Int = 0) {
   val clazz2 = new Class()// using third constructor
   clazz2.method("Using overridden method")
 ```
-#### Good practices: Immutability and DRY
+### Good practices: Immutability and DRY
 * **Immutability** is when, instead of changing the instance, return a new instance with the new values
 * **DRY** in this case means, that if you override any method, try to use recursion instead repeating the same as the overridden one
 
@@ -73,8 +72,8 @@ class Person(val name: String, var age: Int) {
 }
 ```
 
-### 12. 13. Syntactic Sugar: Method Notations
-#### "Operators" in Scala
+## 12. 13. Syntactic Sugar: Method Notations
+### "Operators" in Scala
 In Scala, we can use use spaces instead of dots and parenthesis for calling fields or methods with 0 or 1 parameters.
 ```scala
 val object = new Class(...)
@@ -83,7 +82,7 @@ object method // = object.method
 object method parameter // = object.method(parameter)
 ```
 
-##### Infix notation
+#### Infix notation
 In the case of methods with 1 parameter, the method acts like an operator because it's between 2 things and yields a 3rd thing.
 ```scala
 val result = object method parameter // = object.method(parameter)
@@ -108,7 +107,7 @@ val anne = new Person("Anne", 16)
 joe + anne // returns "Joe is with Anne"
 ```
 
-##### Postfix notation
+#### Postfix notation
 In the case of fields and methods with 0 parameters, they act like postfix operators
 ```scala
 val joe = new Person("Joe", 15)
@@ -118,7 +117,7 @@ joe learnsScala // calls the joe.learnsScala method
 ```
 Not very used because may cause confusion reading code!!
 
-##### Prefix notation and unary operators
+#### Prefix notation and unary operators
 An unary operator is an operator that is applied to 1 thing and yields a 2nd thing
 The only ones we have in Scala are: - + ~ !
 Those are also methods, and can be called using **.unary_** and the symbol
@@ -140,7 +139,7 @@ val joe = new Person("Joe", 15)
 joe.unary_! // = !joe
 ```
 
-#### Method apply()
+### Method apply()
 If we define in a class the method apply, in can be called adding parenthesis to the object: **object()**
 ```scala
 class Class(val field: String) {
@@ -153,8 +152,8 @@ object1() // Just the object with parenthesis
 ```
 This is very helpful because allows us to treat object in a functional way!
 
-### 14. Scala Objects
-#### Class level functionality
+## 14. Scala Objects
+### Class level functionality
 Methods and attributes that belong to the class not to the Oject. 
 The **'static'** in Java, we access to the Class not to the Instance (or Object)
 
@@ -177,7 +176,7 @@ Person.NUMBER_OF_EYES // = 2
 Person.canFly // = false
 ```
 
-#### Singleton
+### Singleton
 Objects in scala are also **Singletons** by definition. There's only 1 instance per **Object**
 ```scala
 val mary = Person // Doesn't create a new Instance, just makes the val mary point to the instance/object Person
@@ -187,7 +186,7 @@ println(mary == john) // true, the same instance/object
 val eli = new Person // Error: Cannot resolve symbol Person
 ```
 
-#### Companions
+### Companions
 The Companion Pattern in Scala is an object and a class with same **scope** and same **name**.
 The purpose of this is to have the static/class-level functionality in the **Object** and the instance-level functionality in the **Class**
 
@@ -214,7 +213,7 @@ eli.canFly // Error: The Instance cannot access to a class-level Method
 eli.getName // = 0
 ```
 
-#### Factory Method
+### Factory Method
 This pattern is implemented with a method whose purpose is **generate instances** of a class using the given parameters
 In Scala we do it using the **apply()** method in the **Object Companion** and generating instances of the **Class Companion**:
 
@@ -235,7 +234,7 @@ val john = new Person("John")
 val bobbie = Person(mary, john)
 ```
 
-#### Main method
+### Main method
 The JVM needs the main function as entry point.
 In java we have the `'static void main(String args[])'` method:
 ```java
@@ -263,7 +262,7 @@ object ScalaApp extends App {
 }
 ```
 
-### 15. Inheritance
+## 15. Inheritance
 ```scala
 class Animal { 
   def eat = println("nom")
@@ -273,14 +272,14 @@ class Cat extends Animal {
   override def eat = println("slurp slurp slurp")
 }
 ```
-#### Access modifiers
+### Access modifiers
 * **def** method: Can be accessed everywhere
 * **private def** method: Can only accessed by the Class in Class level
 * **protected def** method: Can be accessed by the Class and Subclasses in Class level
 * **final def/class**: Can't be overridden
 * **sealed def/class**: Can be **only** overridden in the current file
 
-#### Constructor
+### Constructor
 If the SuperClass has a constructor, we need to call it the SubClass definition
 ```scala
 class Person(name: String, age: Int) { // Person class with Constructor
@@ -291,7 +290,7 @@ class Adult(name: String, age: Int, idCard: String) extends Person(name, age)
 // Adult1 is using the secondary constructor 
 class Adult1(name: String, age: Int, idCard: String) extends Person(name) 
 ```
-#### Overriding
+### Overriding
 We can override public and protected methods and attributes of the SuperClass.
 We can also call the public and protected methods of the SuperClass with **super**
 ```scala
@@ -316,7 +315,7 @@ class Dog1(dogType: String = "domestic") extends Animal {
   override val creatureType = dogType  
 }
 ```
-#### Polymorphism
+### Polymorphism
 Declare a SuperClass type but save a SubClass inside.
 This is correct because a SubClass will always be compatible the SuperClass type.
 We can only call the available SuperClass methods and attributes, but we are going to use the overridden implementations in the SubClass (if any)
@@ -330,7 +329,7 @@ unknownAnimal.eat
 unknownAnimal1.eat 
 ```
 
-### 16. Inheritance, Continued: Abstract Classes and Traits
+## 16. Inheritance, Continued: Abstract Classes and Traits
 A **Class** can extend only one **SuperClass**, but can extend multiple **Traits**.
 Scala is **Single-Class inheritance** but **Multiple-Traits inheritance**
 
@@ -361,12 +360,12 @@ class Class extends AbstractClass with Trait1 with Trait2 {
 }
 ```
 
-#### Difference between Traits and Abstract Class
+### Difference between Traits and Abstract Class
 * Traits do not have constructor parameters
 * Multiple Traits may be inherited by the same Class, but only can extend 1 Abstract class
 * Traits = Behaviors, Abstract = "Thing"
 
-#### Scala's Type Hierarchy
+### Scala's Type Hierarchy
 
 * **scala.Any**: The mother of all types
   * **scala.AnyRef** (java.lang.Object): String, List, Set... also the Plain Classes we use like Person
@@ -374,7 +373,7 @@ class Class extends AbstractClass with Trait1 with Trait2 {
   * **scala.AnyVal**: Int, Unit, Boolean... All the Primitive values of Scala
 * **scala.Nothing**: Is a subtype of **EVERYTHING** in Scala. Nothing can replace Everything. Means no Instance of anything at all
    
-### 18. Generics
+## 18. Generics
 Sometimes you want to create a new class or function that uses a parameter. But are not really
 interested with the **parameter type** just use a generic one, or even, be able to define 
 rules about it.
@@ -392,28 +391,28 @@ object MyListExample {
 }
 val emptyListOfIntegers = MyListExample.empty[Int]
 ```
-#### Variance types
+### Variance types
 We can define some rules about those **Generic Parameteres**
-##### Covariance
+#### Covariance
 Accepts the class A any subclass of A
 ```scala
 class CovariantList[+A]
 val animal: Animal = new Cat
 val animalList: CovariantList[Animal] = new CovariantList[Cat]
 ```
-##### Invariance
+#### Invariance
 Only accepts the class A
 ```scala
 class InvariantList[A]
 val invariantAnimalList: InvariantList[Animal] = new InvariantList[Animal]
 ```
-##### Contravariance
+#### Contravariance
 Only accepts A and superclass of A
 ```scala
 class ContravariantList[-A]
 val contravariantList: ContravariantList[Cat] = new ContravariantList[Animal]
 ```
-##### Bounded types
+#### Bounded types
 Restrict only **Subtypes** or **Supertypes** of certain class
 ```scala
 class Clase
@@ -423,7 +422,7 @@ class BoundedSuper[A >: Clase](instance: A) // supertypes of Clase
 val bounded = new BoundedSub(new Clase)
 ```
 
-##### Covariance + Bounded types
+#### Covariance + Bounded types
 Poblem: Can we add Dogs in a Covariant list of Cats? 
 ```scala
 animalList.add(new Dog)
