@@ -1,46 +1,47 @@
 package exercices
 
-
 import scala.annotation.tailrec
 
-/*
-  List of integers
-  head = first element of the list
-  tail = remainder of the list
-  isEmpty = is this list empty
-  add(int) = new list with this element added
-  toString = a string representation of the list
- */
-abstract class MiLista(val firstElement: ListElement, val lastElement: ListElement) {
+/**
+  * My version of the exercise MyList
+  *
+  * List of integers
+  * head = first element of the list
+  * tail = remainder of the list
+  * isEmpty = is this list empty
+  * add(int) = new list with this element added
+  * toString = a string representation of the list
+  */
+abstract class MiListaInt(val firstElement: ListaIntElement, val lastElement: ListaIntElement) {
   def head: Int
-  def tail: MiLista
+  def tail: MiListaInt
   def isEmpty: Boolean
-  def add(newNumber: Int): MiLista
+  def add(newNumber: Int): MiListaInt
   def toString: String
 }
 
-class ListElement(val value: Int, var nextElement: ListElement = null) {
+class ListaIntElement(val value: Int, var nextElement: ListaIntElement = null) {
 }
 
-class MiListaImplementation(firstElement: ListElement = null, lastElement: ListElement = null) extends MiLista(firstElement, lastElement) {
+class MiListaIntImplementation(firstElement: ListaIntElement = null, lastElement: ListaIntElement = null) extends MiListaInt(firstElement, lastElement) {
   def head: Int = firstElement.value
-  def tail: MiListaImplementation = new MiListaImplementation(firstElement.nextElement, lastElement)
+  def tail: MiListaIntImplementation = new MiListaIntImplementation(firstElement.nextElement, lastElement)
   def isEmpty: Boolean = if (firstElement == null) true else false
 
-  def add(newNumber: Int): MiListaImplementation = {
-    val newElement: ListElement = new ListElement(newNumber)
+  def add(newNumber: Int): MiListaIntImplementation = {
+    val newElement: ListaIntElement = new ListaIntElement(newNumber)
     if(firstElement == null)
-      new MiListaImplementation(newElement, newElement)
+      new MiListaIntImplementation(newElement, newElement)
     else {
       lastElement.nextElement = newElement
-      new MiListaImplementation(firstElement, newElement)
+      new MiListaIntImplementation(firstElement, newElement)
     }
 
   }
 
   override def toString: String = {
     @tailrec
-    def makeString(printElement: ListElement, accumulator: String = ""): String = {
+    def makeString(printElement: ListaIntElement, accumulator: String = ""): String = {
       if(printElement == null) {
         accumulator
       }
@@ -52,8 +53,46 @@ class MiListaImplementation(firstElement: ListElement = null, lastElement: ListE
   }
 }
 
-object TestMiLista extends App{
-  val testList = new MiListaImplementation
+object TestMiListaInt extends App{
+  val testList = new MiListaIntImplementation
   val testList1 = testList.add(1).add(2).add(3)
   println(testList1)
+}
+
+/**
+  * My version of the exercise MyList Generic
+  *
+  * Make MyInyList Generic
+  */
+abstract class MiGenericLista {
+  def head: Int
+  def tail: MiGenericLista
+  def isEmpty: Boolean
+  def add(element: Int): MiGenericLista
+  def printElements: String
+  override def toString: String = "[" + printElements + "]"
+}
+
+object EmptyGenericLista extends MiGenericLista {
+  def head: Int = throw new NoSuchElementException
+  def tail: MiGenericLista = throw new NoSuchElementException
+  def isEmpty: Boolean = true
+  def add(element: Int): MiGenericLista = new ConsGenericLista(element, EmptyGenericLista)
+  override def printElements: String = ""
+}
+
+class ConsGenericLista(h: Int, t: MiGenericLista) extends MiGenericLista {
+  def head: Int = h
+  def tail: MiGenericLista = t
+  def isEmpty: Boolean = false
+  def add(element: Int): MiGenericLista = new ConsGenericLista(element, this)
+  override def printElements: String =
+    if (t.isEmpty) "" + h
+    else h + " " + t.printElements
+}
+
+object TestMiGenericLista extends App{
+  val list = new ConsGenericLista(1, new ConsGenericLista(2, new ConsGenericLista(3, EmptyGenericLista)))
+  println(list)
+  println(list.add(0))
 }

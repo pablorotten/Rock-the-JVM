@@ -55,13 +55,13 @@ object Generics extends App{
   class MyListCovariance[+A] {
     // If in the list of A, add a element of B, which is a superclass of A; Then the list of A will turn into a list of B (more generic)
     def add[B >: A](element: B): MyListCovariance[B] = ???
-    /*
-    A = Cat
-    B = Dog => Animal
-    If I add a Dog (Animal) in a list of Cats, then I will have a List of Animals
-    */
   }
 
+  /*
+  A = Cat
+  B = Dog => Animal
+  If I add a Dog (Animal) in a list of Cats, then I will have a List of Animals
+  */
   class AnimalList[+A] {
     def add[B >: A](element: B): AnimalList[B] = ???
   }
@@ -72,4 +72,8 @@ object Generics extends App{
   val catList = new AnimalList[Cat].add(michu) // List of cat
   val animalList1 = catList.add(fray) // List of cat + dog = List of Animals
   val animalList2 = animalList1.add(monchito) // List of cat + dog + cat = still List of Animals
+
+  /*
+    Expand MyList to be generic
+   */
 }

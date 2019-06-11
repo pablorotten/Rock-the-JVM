@@ -295,7 +295,6 @@ class Adult1(name: String, age: Int, idCard: String) extends Person(name)
 We can override public and protected methods and attributes of the SuperClass.
 We can also call the public and protected methods of the SuperClass with **super**
 ```scala
-
 class Animal { 
   val creatureType = "wild"
   
