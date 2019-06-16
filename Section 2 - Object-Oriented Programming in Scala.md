@@ -452,9 +452,9 @@ val animalList2 = animalList1.add(monchito) // List of cat + dog + cat = still L
 
 ## 19. Anonymous Classes
 We can instantiate abstract classes, traits or normal classes on the fly overriding and adding their behaviours.
-W e always have to respect the rules:
+We always have to respect the rules:
 * pass the required constructor arguments if needed
-* implement all abstract fields/method
+* implement all abstract fields/methods
 
 ```scala
 abstract class AbstractClass(parameter: String) {
