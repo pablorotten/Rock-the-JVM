@@ -444,7 +444,44 @@ class MyListCovariance[+A] {
 val michu: Cat = new Cat
 val fray: Dog = new Dog
 val monchito: Cat = new Cat
+
 val catList = new MyListCovariance[Cat].add(michu) // List of cat
 val animalList1 = catList.add(fray) // List of cat + dog = List of Animals
 val animalList2 = animalList1.add(monchito) // List of cat + dog + cat = still List of Animals
+```
+
+## 19. Anonymous Classes
+We can instantiate abstract classes, traits or normal classes on the fly overriding and adding their behaviours.
+W e always have to respect the rules:
+* pass the required constructor arguments if needed
+* implement all abstract fields/method
+
+```scala
+abstract class AbstractClass(parameter: String) {
+  val attribute: Any
+  def method: Unit
+}
+
+trait Trait {
+  val attribute: Any
+  def method: Unit
+}
+
+class NormalClass(parameter: String) {
+  val attribute: Any = ???
+  def method: Unit = ???
+}
+
+val anonymousClass1: AbstractClass = new AbstractClass(parameter = "Parameter") {
+  override val attribute: Any = "Attribute"
+  override def method: Unit = println("Method")
+}
+val anonymousClass2: Trait = new Trait {
+  override val attribute: Any = "Attribute"
+  override def method: Unit = println("Method")
+}
+val anonymousClass3: NormalClass = new NormalClass(parameter = "Parameter") {
+  override val attribute: Any = "Attribute"
+  override def method: Unit = println("Method")
+}
 ```
