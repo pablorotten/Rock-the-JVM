@@ -73,12 +73,11 @@ abstract class MiGenericLista[+A] {
   override def toString: String = "[" + printElements + "]"
 }
 
-/**
-  * Any is Supertype of Everything, so we are starting from the top. If we use 'Any' for the Empty list,
-  * the List will be always a list of 'Any'. This will work but is not very precise.
-  *
-  * It's better to use 'Nothing'. So the list will be a list of the lowest Supertype that is needed
-  */
+/*
+Any is Supertype of Everything, so we are starting from the top. If we use 'Any' for the Empty list,
+the List will be always a list of 'Any'. This will work but is not very precise.
+It's better to use 'Nothing'. So the list will be a list of the lowest Supertype that is needed
+ */
 object EmptyGenericLista extends MiGenericLista[Any] {
   def head: Any = throw new NoSuchElementException
   def tail: MiGenericLista[Any] = throw new NoSuchElementException

@@ -58,9 +58,9 @@ abstract class MyGenericList[+A] {
   override def toString: String = "[" + printElements + "]"
 }
 
-/**
-  * 'Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
-  */
+/*
+ Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
+ */
 object EmptyGenericList extends MyGenericList[Nothing] {
   def head: Nothing = throw new NoSuchElementException
   def tail: MyGenericList[Nothing] = throw new NoSuchElementException
