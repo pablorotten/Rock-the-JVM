@@ -394,12 +394,15 @@ val emptyListOfIntegers = MyListExample.empty[Int]
 ### Variance types
 We can define some rules about those **Generic Parameteres**
 #### Covariance
-Accepts the class A any subclass of A
+For two types A and B where A is a subtype of B, then Class[A] is a subtype of Class[B]
+
+(+) Class[SuperClass] accepts Class[Subclass]
 ```scala
 class CovariantList[+A]
 val animal: Animal = new Cat
 val animalList: CovariantList[Animal] = new CovariantList[Cat]
 ```
+The CovariantList of Animals accepts Cats, because a CovariantList of Cats is a CovariantList of Animals
 #### Invariance
 Only accepts the class A
 ```scala
@@ -407,11 +410,14 @@ class InvariantList[A]
 val invariantAnimalList: InvariantList[Animal] = new InvariantList[Animal]
 ```
 #### Contravariance
-Only accepts A and superclass of A
+For two types A and B where A is a subtype of B, Class[B] is a subtype of Class[A]
+
+(-) Class[Subclass] accepts Class[SuperClass]
 ```scala
 class ContravariantList[-A]
 val contravariantList: ContravariantList[Cat] = new ContravariantList[Animal]
 ```
+The ContravariantList of Cats accepts Animals, because a ContravariantList of Animals is a ContravariantList of Cats
 #### Bounded types
 Restrict only **Subtypes** or **Supertypes** of certain class
 ```scala
