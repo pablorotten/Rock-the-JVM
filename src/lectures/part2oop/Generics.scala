@@ -27,7 +27,6 @@ object Generics extends App{
 
   // 1. YES, List[Cat] extends List[Animal] <= COVARIANCE
   class CovariantList[+A]
-  val animal: Animal = new Cat
   val animalList: CovariantList[Animal] = new CovariantList[Cat]
   // animalList.add(new Dog) //  This is OK ??? HARD QUESTION => We return a list of animal
 
