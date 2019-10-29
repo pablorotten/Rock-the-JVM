@@ -97,3 +97,130 @@ object TestMyGenericList extends App{
   val anyList = anyValList.add("Seven")
   println(anyList)
 }
+
+/**
+20. Object-Oriented Exercises: Expanding Our Collection
+
+  1. Generic trait MyPredicate[-T]: With a method test(T) if a value of type T passes a condition. Any subclass of MyPredicate[T] will have to implement this method
+  2. Generic trait MyTransformer[-A, B]: With a method transform(A) => B to convert a value of type A into a value of type B
+  3. Implement functions on MyList:
+      - map(transformer) => MyList
+      - filter(predicate) => MyList
+      - flatMap(transformer from A to MyList[B]) => MyList[B]
+
+
+
+    class EvenPredicate extends MyPredicate[Int]
+    class StringToIntTransformer extends MyTransformer[String, Int]
+
+    [1,2,3].map(n * 2) = [2,4,6]
+    [1,2,3,4].filter(n % 2) = [2,4]
+    [1,2,3].flatMap(n => [n, n+1]) => [1,2,2,3,3,4]
+*/
+
+trait MyPredicate[-T] {
+  def test(element: T): Boolean
+}
+
+trait MyTransformer[-A, B] {
+  def transform(element: A): B
+}
+
+abstract class MyExpandedList[+A] {
+  def head: A
+  def tail: MyExpandedList[A]
+  def isEmpty: Boolean
+  def add[B >: A](element: B): MyExpandedList[B]
+  def printElements: String
+  override def toString: String = "[" + printElements + "]"
+
+  def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B]
+  def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B]
+  def filter(predicate: MyPredicate[A]): MyExpandedList[A]
+
+  // concatenation
+  def ++[B >: A](list: MyExpandedList[B]): MyExpandedList[B]
+}
+
+/*
+ Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
+ */
+object EmptyExpandedList extends MyExpandedList[Nothing] {
+  def head: Nothing = throw new NoSuchElementException
+  def tail: MyExpandedList[Nothing] = throw new NoSuchElementException
+  def isEmpty: Boolean = true
+  def add[B >: Nothing](element: B): MyExpandedList[B] = new ConsExpandedList(element, this) // adds in the beginning and puts the current list in the tail
+  override def printElements: String = ""
+
+  def map[B](transformer: MyTransformer[Nothing, B]): MyExpandedList[B] = EmptyExpandedList
+  def flatMap[B](transformer: MyTransformer[Nothing, MyExpandedList[B]]): MyExpandedList[Nothing] = EmptyExpandedList
+  def filter(predicate: MyPredicate[Nothing]): MyExpandedList[Nothing] = EmptyExpandedList
+
+  def ++[B >: Nothing](list: MyExpandedList[B]): MyExpandedList[B] = list
+}
+
+class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedList[A] {
+  def head: A = h
+  def tail: MyExpandedList[A] = t
+  def isEmpty: Boolean = false
+  def add[B >: A](element: B): MyExpandedList[B] = new ConsExpandedList(element, this) // adds in the beginning and puts the current list in the tail
+  override def printElements: String =
+    if (t.isEmpty) "" + h
+    else h + " " + t.printElements
+
+  /*
+    [1,2,3].filter(n % 2) == 0 =
+    [2,3].filter(n % 2) == 0 =
+    = new Cons(2, [3].filter(n % 2) == 0))
+    = new Cons(2, Empty.filter(n % 2) == 0))
+    = new Cons(2, Empty)
+   */
+  override def filter(predicate: MyPredicate[A]): MyExpandedList[A] =
+    if (predicate.test(h)) new ConsExpandedList(h, t.filter(predicate))
+    else t.filter(predicate)
+
+  /*
+    [1,2,3].map(n * 2)
+      = new Cons(2, [2,3].map(n * 2))
+      = new Cons(2, new Cons(4, [3].map(n * 2)))
+      = new Cons(2, new Cons(4, new Cons(6, Empty.map(n * 2))))
+      = new Cons(2, new Cons(4, new Cons(6, Empty))))
+   */
+  override def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B] =
+    new ConsExpandedList(transformer.transform(h), tail.map(transformer))
+  /*
+    [1,2] ++ [3,4,5]
+    = new Cons(1, [2] ++ [3,4,5]
+    = new Cons(1, new Cons(2, Empty ++ [3,4,5]))
+    = new Cons(1, new Cons(2, new Cons(3, new Cons(4, new Cons(5)))))
+   */
+  override def ++[B >: A](list: MyExpandedList[B]): MyExpandedList[B] = new ConsExpandedList(h, t ++ list)
+
+  /*
+    [1,2].flatMap(n => [n, n+1])
+    = [1,2] ++ [2].flatmap(n > [n, n+1])
+    = [1,2] ++ [2,3] ++ Empty.flatmap(n > [n, n+1])
+    = [1,2] ++ [2,3] ++ Empty
+    = [1,2,2,3]
+   */
+  override def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B] =
+    transformer.transform(h) ++ t.flatMap(transformer)
+}
+
+object TestMyExpandedList extends App{
+  val intList = new ConsExpandedList(3, new ConsExpandedList(2, new ConsExpandedList(1, EmptyExpandedList)))
+  val anotherIntList = new ConsExpandedList(4, new ConsExpandedList(5, EmptyExpandedList))
+
+  println(intList.map(new MyTransformer[Int, Int] {
+    override def transform(element: Int): Int = element * 2
+  }))
+
+  println(intList.filter(new MyPredicate[Int] {
+    override def test(element: Int): Boolean = element % 2 == 0
+  }))
+
+  println(intList ++ anotherIntList)
+  println(intList.flatMap(new MyTransformer[Int, MyExpandedList[Int]] {
+    override def transform(element: Int): MyExpandedList[Int] = new ConsExpandedList[Int](element + 1, EmptyExpandedList)
+  }))
+}
