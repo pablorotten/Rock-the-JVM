@@ -108,8 +108,6 @@ object TestMyGenericList extends App{
       - filter(predicate) => MyList
       - flatMap(transformer from A to MyList[B]) => MyList[B]
 
-
-
     class EvenPredicate extends MyPredicate[Int]
     class StringToIntTransformer extends MyTransformer[String, Int]
 
@@ -145,7 +143,7 @@ abstract class MyExpandedList[+A] {
 /*
  Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
  */
-object EmptyExpandedList extends MyExpandedList[Nothing] {
+case object EmptyExpandedList extends MyExpandedList[Nothing] {
   def head: Nothing = throw new NoSuchElementException
   def tail: MyExpandedList[Nothing] = throw new NoSuchElementException
   def isEmpty: Boolean = true
@@ -159,7 +157,7 @@ object EmptyExpandedList extends MyExpandedList[Nothing] {
   def ++[B >: Nothing](list: MyExpandedList[B]): MyExpandedList[B] = list
 }
 
-class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedList[A] {
+case class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedList[A] {
   def head: A = h
   def tail: MyExpandedList[A] = t
   def isEmpty: Boolean = false
@@ -208,19 +206,26 @@ class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedList[A]
 }
 
 object TestMyExpandedList extends App{
-  val intList = new ConsExpandedList(3, new ConsExpandedList(2, new ConsExpandedList(1, EmptyExpandedList)))
-  val anotherIntList = new ConsExpandedList(4, new ConsExpandedList(5, EmptyExpandedList))
+  val listOfIntegers: MyExpandedList[Int] = new ConsExpandedList(1, new ConsExpandedList(2, new ConsExpandedList(3, EmptyExpandedList)))
+  val cloneListOfIntegers: MyExpandedList[Int] = new ConsExpandedList(1, new ConsExpandedList(2, new ConsExpandedList(3, EmptyExpandedList)))
+  val anotherListOfIntegers: MyExpandedList[Int] = new ConsExpandedList(4, new ConsExpandedList(5, EmptyExpandedList))
+  val listOfStrings: MyExpandedList[String] = new ConsExpandedList("Hello", new ConsExpandedList("Scala", EmptyExpandedList))
 
-  println(intList.map(new MyTransformer[Int, Int] {
+  println(listOfIntegers.toString)
+  println(listOfStrings.toString)
+
+  println(listOfIntegers.map(new MyTransformer[Int, Int] {
     override def transform(element: Int): Int = element * 2
   }))
 
-  println(intList.filter(new MyPredicate[Int] {
+  println(listOfIntegers.filter(new MyPredicate[Int] {
     override def test(element: Int): Boolean = element % 2 == 0
   }))
 
-  println(intList ++ anotherIntList)
-  println(intList.flatMap(new MyTransformer[Int, MyExpandedList[Int]] {
-    override def transform(element: Int): MyExpandedList[Int] = new ConsExpandedList[Int](element + 1, EmptyExpandedList)
+  println(listOfIntegers ++ anotherListOfIntegers)
+  println(listOfIntegers.flatMap(new MyTransformer[Int, MyExpandedList[Int]] {
+    override def transform(element: Int): MyExpandedList[Int] = new ConsExpandedList(element + 1, EmptyExpandedList)
   }))
+
+  println(cloneListOfIntegers == listOfIntegers)
 }

@@ -491,3 +491,17 @@ val anonymousClass3: NormalClass = new NormalClass(parameter = "Parameter") {
   override def method: Unit = println("Method")
 }
 ```
+
+## 21. Case Classes
+* Quick lightweight data structures with little boilerplate
+```scala
+case class Person(name: String, age: Int)
+```
+* Companions already implemented 
+```scala
+val bob = Person("Bob", 26)
+```
+* Sensible equals, hashCode, toString
+* Auto-promoted params to fields
+* Cloning
+* case objects

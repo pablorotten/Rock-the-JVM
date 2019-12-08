@@ -144,68 +144,74 @@ class StringToIntTransformer extends MiTransformer[String, Int] {
       [1,2,3].flatMap(n => [n, n+1]) => [1,2,2,3,3,4]
 */
 
-abstract class MyExpandedLista[+A] {
+abstract class MiExpandedLista[+A] {
   def head: A
-  def tail: MyExpandedLista[A]
+  def tail: MiExpandedLista[A]
   def isEmpty: Boolean
-  def add[B >: A](element: B): MyExpandedLista[B]
+  def add[B >: A](element: B): MiExpandedLista[B]
   def printElements: String
   override def toString: String = "[" + printElements + "]"
-  // New MyPredicate inline that take as parameter the implementation of test. Returns the current list applying the test function to the elements
-  def map[B](transformer: MyTransformer[A, B]): MyExpandedLista[B]
-  // New MyPredicate inline that take as parameter the implementation of test. The elements of the current list that satisfies test
-  def filter(predicate: MyPredicate[A]): MyExpandedLista[A]
+  // New MiPredicate inline that take as parameter the implementation of test. Returns the current list applying the test function to the elements
+  def map[B](transformer: MiTransformer[A, B]): MiExpandedLista[B]
+  // New MiPredicate inline that take as parameter the implementation of test. The elements of the current list that satisfies test
+  def filter(predicate: MiPredicate[A]): MiExpandedLista[A]
+  def ++[B >: A](list: MiExpandedLista[B]): MiExpandedLista[B]
   // The test do the transformation
-  def flatMap[B](transformer: MyTransformer[A, MyExpandedLista[B]]): MyExpandedLista[A]
+  def flatMap[B](transformer: MiTransformer[A, MiExpandedLista[B]]): MiExpandedLista[B]
 }
 
 /*
  Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
  */
-//object EmptyExpandedLista extends MyExpandedLista[Nothing] {
-//  def head: Nothing = throw new NoSuchElementException
-//  def tail: MyExpandedLista[Nothing] = throw new NoSuchElementException
-//  def isEmpty: Boolean = true
-//  def add[B >: Nothing](element: B): MyExpandedLista[B] = new ConsExpandedLista(element, this) // adds in the beginning and puts the current list in the tail
-//  override def printElements: String = ""
-//
-//  def map[B](transformer: MyTransformer[Nothing, B]): MyExpandedLista[B] = EmptyExpandedLista
-//  def filter(predicate: MyPredicate[Nothing]): MyExpandedLista[Nothing] = EmptyExpandedLista
-//  def flatMap[B](transformer: MyTransformer[Nothing, MyExpandedLista[B]]): MyExpandedLista[Nothing] = EmptyExpandedLista
-//}
+object EmptyExpandedLista extends MiExpandedLista[Nothing] {
+  def head: Nothing = throw new NoSuchElementException
+  def tail: MiExpandedLista[Nothing] = throw new NoSuchElementException
+  def isEmpty: Boolean = true
+  def add[B >: Nothing](element: B): MiExpandedLista[B] = new ConsExpandedLista(element, this) // adds in the beginning and puts the current list in the tail
+  override def printElements: String = ""
 
-//class ConsExpandedLista[+A](h: A, t: MyExpandedLista[A]) extends MyExpandedLista[A] {
-//  def head: A = h
-//  def tail: MyExpandedLista[A] = t
-//  def isEmpty: Boolean = false
-//  def add[B >: A](element: B): MyExpandedLista[B] = new ConsExpandedLista(element, this) // adds in the beginning and puts the current list in the tail
-//  override def printElements: String =
-//    if (t.isEmpty) "" + h
-//    else h + " " + t.printElements
-//
-//  override def filter(predicate: MyPredicate[A]): MyExpandedLista[A] =
-//    if (predicate.test(head)) new ConsExpandedLista(h, t.filter(predicate))
-//    else t.filter(predicate)
-//
-//  override def map[B](transformer: MyTransformer[A, B]): MyExpandedLista[B] =
-//
-//}
-//
-//object TestMyExpandedLista extends App{
-//  val list = new ConsExpandedLista(1, new ConsExpandedLista(2, new ConsExpandedLista(3, EmptyExpandedLista)))
-//  println(list)
-//  val listZero = list.add(0)
-//  println(list.add(0))
-//  println(EmptyExpandedLista.add(1).add(34))
-//  println(new ConsExpandedLista(1, EmptyExpandedLista).add(1213).add(12345))
-//
-//  val genericLista = new ConsExpandedLista(1, new ConsExpandedLista(2.0, new ConsExpandedLista("TESTING", EmptyExpandedLista)))
-//
-//  // The interpreter chooses the lowest Supertype that is needed
-//  val intLista = new ConsExpandedLista(3, new ConsExpandedLista(2, new ConsExpandedLista(1, EmptyExpandedLista)))
-//  val longLista = intLista.add(4L)
-//  val doubleLista = longLista.add(5.0)
-//  val anyValLista = doubleLista.add(true)
-//  val anyLista = anyValLista.add("Seven")
-//  println(anyLista)
-//}
+  def map[B](transformer: MiTransformer[Nothing, B]): MiExpandedLista[B] = EmptyExpandedLista
+  def filter(predicate: MiPredicate[Nothing]): MiExpandedLista[Nothing] = EmptyExpandedLista
+  def ++[B >: Nothing](list: MiExpandedLista[B]): MiExpandedLista[B] = list
+  def flatMap[B](transformer: MiTransformer[Nothing, MiExpandedLista[B]]): MiExpandedLista[Nothing] = EmptyExpandedLista
+}
+
+class ConsExpandedLista[+A](h: A, t: MiExpandedLista[A]) extends MiExpandedLista[A] {
+  def head: A = h
+  def tail: MiExpandedLista[A] = t
+  def isEmpty: Boolean = false
+  def add[B >: A](element: B): MiExpandedLista[B] = new ConsExpandedLista(element, this) // adds in the beginning and puts the current list in the tail
+  override def printElements: String =
+    if (t.isEmpty) "" + h
+    else h + " " + t.printElements
+
+  override def filter(predicate: MiPredicate[A]): MiExpandedLista[A] =
+    if (predicate.test(head)) new ConsExpandedLista(h, t.filter(predicate))
+    else t.filter(predicate)
+
+  override def map[B](transformer: MiTransformer[A, B]): MiExpandedLista[B] = new ConsExpandedLista[B](transformer.transform(h), tail.map(transformer))
+
+  override def ++[B >: A](list: MiExpandedLista[B]): MiExpandedLista[B] = new ConsExpandedLista(h, t ++ list)
+
+  override def flatMap[B](transformer: MiTransformer[A, MiExpandedLista[B]]): MiExpandedLista[B] =
+    transformer.transform(h) ++ t.flatMap(transformer)
+}
+
+object TestMiExpandedLista extends App{
+  val list = new ConsExpandedLista(1, new ConsExpandedLista(2, new ConsExpandedLista(3, EmptyExpandedLista)))
+  println(list)
+  val listZero = list.add(0)
+  println(list.add(0))
+  println(EmptyExpandedLista.add(1).add(34))
+  println(new ConsExpandedLista(1, EmptyExpandedLista).add(1213).add(12345))
+
+  val genericLista = new ConsExpandedLista(1, new ConsExpandedLista(2.0, new ConsExpandedLista("TESTING", EmptyExpandedLista)))
+
+  // The interpreter chooses the lowest Supertype that is needed
+  val intLista = new ConsExpandedLista(3, new ConsExpandedLista(2, new ConsExpandedLista(1, EmptyExpandedLista)))
+  val longLista = intLista.add(4L)
+  val doubleLista = longLista.add(5.0)
+  val anyValLista = doubleLista.add(true)
+  val anyLista = anyValLista.add("Seven")
+  println(anyLista)
+}
