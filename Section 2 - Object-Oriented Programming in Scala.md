@@ -505,3 +505,48 @@ val bob = Person("Bob", 26)
 * Auto-promoted params to fields
 * Cloning
 * case objects
+
+## 22. Exceptions
+
+### Typical structure:
+
+```scala
+try {
+  // code that might fail
+} catch {
+  case e: NullPointerException =>
+  case e: RuntimeException =>
+  } finally {
+    // code that will get executed NO MATTER
+    // does not influence the return type of this expression
+    // use finally only for side effects like logging the error
+    println("finally")
+  }
+```
+
+The try-catch-finally value is determined by the try and catch block. The finally block doesn't return anything.
+
+### Custom Exceptions
+
+Can create and throw custom exceptions
+
+```scala
+class MyException extends Exception
+class OverflowException extends RuntimeException
+class UnderflowException extends RuntimeException
+class MathCalculationException extends RuntimeException("Division by 0")
+
+val exception = new MyException
+throw exception
+```
+
+### Provoke exceptions
+
+```scala
+//  OOM
+val array = Array.ofDim(Int.MaxValue)
+
+//  SO
+def infinite: Int = 1 + infinite
+val noLimit = infinite
+```
