@@ -542,11 +542,37 @@ throw exception
 
 ### Provoke exceptions
 
+Out of Memory
 ```scala
-//  OOM
 val array = Array.ofDim(Int.MaxValue)
+```
 
-//  SO
+Stack Overflow
+```scala
 def infinite: Int = 1 + infinite
 val noLimit = infinite
+```
+
+## 23. Packaging and imports
+
+Package: A group of definition under the same name
+Best practice: mirror the file structure
+
+Can import whole package but the best practice is to import the desired classes
+```scala
+import playground._ 
+import playground.{PrinceCharming, Cinderella}
+```
+
+### Avoid import conflicts
+
+Fully Qualified name: Use the complete package + class name
+```scala
+val princess = new playground.Cinderella
+```
+
+Aliasing: Rename the imported classes
+```scala
+import java.sql.{Date => SqlDate}
+val sqlDate2 = new SqlDate(2020, 6, 17)
 ```
