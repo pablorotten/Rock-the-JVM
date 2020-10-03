@@ -132,9 +132,13 @@ abstract class MyExpandedList[+A] {
   def printElements: String
   override def toString: String = "[" + printElements + "]"
 
-  def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B]
-  def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B]
-  def filter(predicate: MyPredicate[A]): MyExpandedList[A]
+//  def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B]
+//  def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B]
+//  def filter(predicate: MyPredicate[A]): MyExpandedList[A]
+  // Converted into functions:
+  def map[B](transformer: (A => B)): MyExpandedList[B]
+  def flatMap[B](transformer: A => MyExpandedList[B]): MyExpandedList[B]
+  def filter(predicate: A => Boolean): MyExpandedList[A]
 
   // concatenation
   def ++[B >: A](list: MyExpandedList[B]): MyExpandedList[B]
@@ -150,9 +154,13 @@ case object EmptyExpandedList extends MyExpandedList[Nothing] {
   def add[B >: Nothing](element: B): MyExpandedList[B] = new ConsExpandedList(element, this) // adds in the beginning and puts the current list in the tail
   override def printElements: String = ""
 
-  def map[B](transformer: MyTransformer[Nothing, B]): MyExpandedList[B] = EmptyExpandedList
-  def flatMap[B](transformer: MyTransformer[Nothing, MyExpandedList[B]]): MyExpandedList[Nothing] = EmptyExpandedList
-  def filter(predicate: MyPredicate[Nothing]): MyExpandedList[Nothing] = EmptyExpandedList
+//  def map[B](transformer: MyTransformer[Nothing, B]): MyExpandedList[B] = EmptyExpandedList
+//  def flatMap[B](transformer: MyTransformer[Nothing, MyExpandedList[B]]): MyExpandedList[Nothing] = EmptyExpandedList
+//  def filter(predicate: MyPredicate[Nothing]): MyExpandedList[Nothing] = EmptyExpandedList
+  // Converted into functions:
+  def map[B](transformer: Nothing => B): MyExpandedList[B] = EmptyExpandedList
+  def flatMap[B](transformer: Nothing => MyExpandedList[B]): MyExpandedList[Nothing] = EmptyExpandedList
+  def filter(predicate: Nothing => Boolean): MyExpandedList[Nothing] = EmptyExpandedList
 
   def ++[B >: Nothing](list: MyExpandedList[B]): MyExpandedList[B] = list
 }
@@ -173,8 +181,8 @@ case class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedLi
     = new Cons(2, Empty.filter(n % 2) == 0))
     = new Cons(2, Empty)
    */
-  override def filter(predicate: MyPredicate[A]): MyExpandedList[A] =
-    if (predicate.test(h)) new ConsExpandedList(h, t.filter(predicate))
+  override def filter(predicate: A => Boolean): MyExpandedList[A] =
+    if (predicate(h)) new ConsExpandedList(h, t.filter(predicate))
     else t.filter(predicate)
 
   /*
@@ -184,8 +192,8 @@ case class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedLi
       = new Cons(2, new Cons(4, new Cons(6, Empty.map(n * 2))))
       = new Cons(2, new Cons(4, new Cons(6, Empty))))
    */
-  override def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B] =
-    new ConsExpandedList(transformer.transform(h), tail.map(transformer))
+  override def map[B](transformer: A => B): MyExpandedList[B] =
+    new ConsExpandedList(transformer(h), tail.map(transformer))
   /*
     [1,2] ++ [3,4,5]
     = new Cons(1, [2] ++ [3,4,5]
@@ -201,8 +209,8 @@ case class ConsExpandedList[+A](h: A, t: MyExpandedList[A]) extends MyExpandedLi
     = [1,2] ++ [2,3] ++ Empty
     = [1,2,2,3]
    */
-  override def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B] =
-    transformer.transform(h) ++ t.flatMap(transformer)
+  override def flatMap[B](transformer: A => MyExpandedList[B]): MyExpandedList[B] =
+    transformer(h) ++ t.flatMap(transformer)
 }
 
 object TestMyExpandedList extends App{
@@ -214,17 +222,17 @@ object TestMyExpandedList extends App{
   println(listOfIntegers.toString)
   println(listOfStrings.toString)
 
-  println(listOfIntegers.map(new MyTransformer[Int, Int] {
-    override def transform(element: Int): Int = element * 2
+  println(listOfIntegers.map(new Function1[Int, Int] {
+    override def apply(element: Int): Int = element * 2
   }))
 
-  println(listOfIntegers.filter(new MyPredicate[Int] {
-    override def test(element: Int): Boolean = element % 2 == 0
+  println(listOfIntegers.filter(new Function1[Int, Boolean] {
+    override def apply(element: Int): Boolean = element % 2 == 0
   }))
 
   println(listOfIntegers ++ anotherListOfIntegers)
-  println(listOfIntegers.flatMap(new MyTransformer[Int, MyExpandedList[Int]] {
-    override def transform(element: Int): MyExpandedList[Int] = new ConsExpandedList(element + 1, EmptyExpandedList)
+  println(listOfIntegers.flatMap(new Function1[Int, MyExpandedList[Int]] {
+    override def apply(element: Int): MyExpandedList[Int] = new ConsExpandedList(element + 1, EmptyExpandedList)
   }))
 
   println(cloneListOfIntegers == listOfIntegers)
