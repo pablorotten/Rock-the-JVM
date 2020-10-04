@@ -1,8 +1,5 @@
 package lectures.part3fp
 
-import exercices.{ConsExpandedList, EmptyExpandedList, MyExpandedList}
-import exercices.TestMyExpandedList.listOfIntegers
-
 object AnonymousFunctions extends App{
 
   val doubler = new Function1[Int, Int] {
