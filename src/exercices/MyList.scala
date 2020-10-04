@@ -2,12 +2,12 @@ package exercices
 
 /**
   *
-  Create MyList: a List of integers
-  head = first element of the list
-  tail = remainder of the list
-  isEmpty = is this list empty
-  add(int) = new list with this element added
-  toString = a string representation of the list
+  * Create MyList: a List of integers
+  * head = first element of the list
+  * tail = remainder of the list
+  * isEmpty = is this list empty
+  * add(int) = new list with this element added
+  * toString = a string representation of the list
   */
 abstract class MyIntList {
   def head: Int
@@ -149,7 +149,7 @@ abstract class MyList[+A] {
 /*
  Nothing' is the subtype of Everything. So the list will be a list of the lowest Supertype that is needed
  */
-case object EmptyList$ extends MyList[Nothing] {
+case object EmptyList extends MyList[Nothing] {
   def head: Nothing = throw new NoSuchElementException
   def tail: MyList[Nothing] = throw new NoSuchElementException
   def isEmpty: Boolean = true
@@ -160,9 +160,9 @@ case object EmptyList$ extends MyList[Nothing] {
 //  def flatMap[B](transformer: MyTransformer[Nothing, MyList[B]]): MyList[Nothing] = EmptyList
 //  def filter(predicate: MyPredicate[Nothing]): MyList[Nothing] = EmptyList
   // Converted into functions:
-  def map[B](transformer: Nothing => B): MyList[B] = EmptyList$
-  def flatMap[B](transformer: Nothing => MyList[B]): MyList[Nothing] = EmptyList$
-  def filter(predicate: Nothing => Boolean): MyList[Nothing] = EmptyList$
+  def map[B](transformer: Nothing => B): MyList[B] = EmptyList
+  def flatMap[B](transformer: Nothing => MyList[B]): MyList[Nothing] = EmptyList //check
+  def filter(predicate: Nothing => Boolean): MyList[Nothing] = EmptyList
 
   def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
@@ -216,10 +216,10 @@ case class ConsList[+A](h: A, t: MyList[A]) extends MyList[A] {
 }
 
 object TestMyList extends App{
-  val listOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList$)))
-  val cloneListOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList$)))
-  val anotherListOfIntegers: MyList[Int] = new ConsList(4, new ConsList(5, EmptyList$))
-  val listOfStrings: MyList[String] = new ConsList("Hello", new ConsList("Scala", EmptyList$))
+  val listOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList)))
+  val cloneListOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList)))
+  val anotherListOfIntegers: MyList[Int] = new ConsList(4, new ConsList(5, EmptyList))
+  val listOfStrings: MyList[String] = new ConsList("Hello", new ConsList("Scala", EmptyList))
 
   println(listOfIntegers.toString)
   println(listOfStrings.toString)
@@ -240,11 +240,11 @@ object TestMyList extends App{
 
   println(listOfIntegers ++ anotherListOfIntegers)
   println(listOfIntegers.flatMap(new Function1[Int, MyList[Int]] {
-    override def apply(element: Int): MyList[Int] = new ConsList(element + 1, new ConsList(element + 1, EmptyList$))
+    override def apply(element: Int): MyList[Int] = new ConsList(element + 1, new ConsList(element + 1, EmptyList))
   }))
   // equivalent
-  println(listOfIntegers.flatMap((element: Int) => new ConsList(element + 1,  new ConsList(element + 1, EmptyList$))))
-  println(listOfIntegers.flatMap(element => new ConsList(element + 1,  new ConsList(element + 1, EmptyList$))))
+  println(listOfIntegers.flatMap((element: Int) => new ConsList(element + 1,  new ConsList(element + 1, EmptyList))))
+  println(listOfIntegers.flatMap(element => new ConsList(element + 1,  new ConsList(element + 1, EmptyList))))
 
   println(cloneListOfIntegers == listOfIntegers)
 }
