@@ -68,3 +68,40 @@ val adderAnonFunc: ((Int, Int) => Int) = (a: Int, b: Int) => a + b
 // Syntactic sugar
 val adderAnonFuncSugar: ((Int, Int) => Int) =  _ + _
 ```
+
+
+## Higher Order Functions (HOFs) and Curries
+
+### Higher Order Functions (HOFs)
+
+Accepts a function as a parameter
+
+```scala
+def nTimes(f: Int => Int, n: Int, x: Int): Int = {
+  if (n <= 0) x
+  else nTimes(f, n-1, f(x))
+}
+val plusOne = (x: Int) => x + 1
+
+println(nTimes(plusOne, 10, 1))
+```
+
+### Curried functions
+
+Functions with multiple parameter lists
+
+```scala
+val superAdder: Int => (Int => Int) = (x: Int) => (y: Int) => x + y
+superAdder(2)(5) // = 7
+```
+
+### HOF + Curried
+
+In standard Format we set the 1st parameter list and save the result function in standardFormat.
+So standardFormat is a function that needs a parameter (the 2nd param list of curried Formatter) to be executed
+
+```scala
+def curriedFormatter(c: String)(x: Double): String = c.format(x)
+val standardFormat: (Double => String) = curriedFormatter("%4.2f")
+println(standardFormat(Math.PI))
+```
