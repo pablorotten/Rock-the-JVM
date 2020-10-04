@@ -52,4 +52,19 @@ val superAdder: Function1[Int, Function1[Int, Int]] = new Function1[Int, Functio
 superAdder(3)(2)
 ```
 
+## Anonymous Functions (Lambdas λ)
 
+A **lambda λ** is a function that is just defined and saved in a **val**.
+They just need parameters and the function definition, return type can be inferred.
+If a parameter is only used once, can be replace with underscore _
+
+```scala
+val adder: ((Int, Int) => Int) = new Function2[Int, Int, Int] {
+  override def apply(a: Int, b: Int): Int = a + b
+}
+
+// Anonymize
+val adderAnonFunc: ((Int, Int) => Int) = (a: Int, b: Int) => a + b
+// Syntactic sugar
+val adderAnonFuncSugar: ((Int, Int) => Int) =  _ + _
+```

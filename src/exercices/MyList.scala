@@ -225,15 +225,24 @@ object TestMyExpandedList extends App{
   println(listOfIntegers.map(new Function1[Int, Int] {
     override def apply(element: Int): Int = element * 2
   }))
+  // equivalents
+  println(listOfIntegers.map((element: Int) => element * 2))
+  println(listOfIntegers.map(_ * 2))
 
   println(listOfIntegers.filter(new Function1[Int, Boolean] {
     override def apply(element: Int): Boolean = element % 2 == 0
   }))
+  // equivalent
+  println(listOfIntegers.filter((element: Int) => element % 2 == 0))
+  println(listOfIntegers.filter(_ % 2 == 0))
 
   println(listOfIntegers ++ anotherListOfIntegers)
   println(listOfIntegers.flatMap(new Function1[Int, MyExpandedList[Int]] {
-    override def apply(element: Int): MyExpandedList[Int] = new ConsExpandedList(element + 1, EmptyExpandedList)
+    override def apply(element: Int): MyExpandedList[Int] = new ConsExpandedList(element + 1, new ConsExpandedList(element + 1, EmptyExpandedList))
   }))
+  // equivalent
+  println(listOfIntegers.flatMap((element: Int) => new ConsExpandedList(element + 1,  new ConsExpandedList(element + 1, EmptyExpandedList))))
+  println(listOfIntegers.flatMap(element => new ConsExpandedList(element + 1,  new ConsExpandedList(element + 1, EmptyExpandedList))))
 
   println(cloneListOfIntegers == listOfIntegers)
 }
