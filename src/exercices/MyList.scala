@@ -132,9 +132,9 @@ abstract class MyList[+A] {
   def printElements: String
   override def toString: String = "[" + printElements + "]"
 
-//  def map[B](transformer: MyTransformer[A, B]): MyExpandedList[B]
-//  def flatMap[B](transformer: MyTransformer[A, MyExpandedList[B]]): MyExpandedList[B]
-//  def filter(predicate: MyPredicate[A]): MyExpandedList[A]
+//  def map[B](transformer: MyTransformer[A, B]): MyList[B]
+//  def flatMap[B](transformer: MyTransformer[A, MyList[B]]): MyList[B]
+//  def filter(predicate: MyPredicate[A]): MyList[A]
   // Converted into functions:
   def map[B](transformer: (A => B)): MyList[B]
   def flatMap[B](transformer: A => MyList[B]): MyList[B]
@@ -142,6 +142,8 @@ abstract class MyList[+A] {
 
   // concatenation
   def ++[B >: A](list: MyList[B]): MyList[B]
+
+  // hofs
 }
 
 /*
@@ -154,9 +156,9 @@ case object EmptyList$ extends MyList[Nothing] {
   def add[B >: Nothing](element: B): MyList[B] = new ConsList(element, this) // adds in the beginning and puts the current list in the tail
   override def printElements: String = ""
 
-//  def map[B](transformer: MyTransformer[Nothing, B]): MyExpandedList[B] = EmptyExpandedList
-//  def flatMap[B](transformer: MyTransformer[Nothing, MyExpandedList[B]]): MyExpandedList[Nothing] = EmptyExpandedList
-//  def filter(predicate: MyPredicate[Nothing]): MyExpandedList[Nothing] = EmptyExpandedList
+//  def map[B](transformer: MyTransformer[Nothing, B]): MyList[B] = EmptyList
+//  def flatMap[B](transformer: MyTransformer[Nothing, MyList[B]]): MyList[Nothing] = EmptyList
+//  def filter(predicate: MyPredicate[Nothing]): MyList[Nothing] = EmptyList
   // Converted into functions:
   def map[B](transformer: Nothing => B): MyList[B] = EmptyList$
   def flatMap[B](transformer: Nothing => MyList[B]): MyList[Nothing] = EmptyList$
@@ -213,7 +215,7 @@ case class ConsList[+A](h: A, t: MyList[A]) extends MyList[A] {
     transformer(h) ++ t.flatMap(transformer)
 }
 
-object TestMyExpandedList extends App{
+object TestMyList extends App{
   val listOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList$)))
   val cloneListOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList$)))
   val anotherListOfIntegers: MyList[Int] = new ConsList(4, new ConsList(5, EmptyList$))
