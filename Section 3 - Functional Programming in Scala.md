@@ -104,4 +104,6 @@ So standardFormat is a function that needs a parameter (the 2nd param list of cu
 def curriedFormatter(c: String)(x: Double): String = c.format(x)
 val standardFormat: (Double => String) = curriedFormatter("%4.2f")
 println(standardFormat(Math.PI))
+
+def curriedAdder(x: Double)(y: Double) = x + y
 ```
