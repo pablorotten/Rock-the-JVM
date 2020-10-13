@@ -289,10 +289,18 @@ object TestMyList extends App{
 
 object TestMyListHof extends App{
   val listOfIntegers: MyList[Int] = new ConsList(1, new ConsList(2, new ConsList(3, EmptyList)))
+  val listOfStrings: MyList[String] = new ConsList("Hello", new ConsList("Scala", EmptyList))
+
   println(listOfIntegers.toString)
   listOfIntegers.foreach(println)
 
   println(listOfIntegers.sort((x, y) => y - x))
   println(listOfIntegers.zipWith(new ConsList(4, new ConsList(5, new ConsList(6, EmptyList))), (x:Int, y:Int) => x*y))
   println(listOfIntegers.fold(2)((x:Int, y:Int) => x*y))
+
+  // for comprehensions
+  println(for {
+    n <- listOfIntegers
+    string <- listOfStrings
+  } yield n + "-" + string)
 }

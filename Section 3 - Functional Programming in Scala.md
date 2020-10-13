@@ -107,3 +107,41 @@ println(standardFormat(Math.PI))
 
 def curriedAdder(x: Double)(y: Double) = x + y
 ```
+
+## map, flatMap, filter and for-comprehensions
+
+Some list utilities:
+
+
+```scala
+val list = List(1, 2, 3)
+list.head
+list.tail
+
+list.map(_ + 1)
+list.map(_ + " is a number")
+
+list.filter(_ % 2 == 0) // gets only even numbers f the list
+```
+
+flatMap() makes a **map** over the collection and then a **flatten**
+
+```scala
+  val numbers = List(1, 2, 3, 4)
+  val chars = List('a', 'b', 'c', 'd')
+  val animals = List("🐯", "🦄")
+
+  val combinations = numbers.flatMap(number => chars.flatMap(char => animals.map(animal => s"$animal$number$char")))
+  // List(🐯1a, 🦄1a, 🐯1b, 🦄1b, 🐯2a, 🦄2a, 🐯2b, 🦄2b)
+```
+
+This can be difficult to read, that's why we have the **for-comprehensions**.
+Can also use guards to add conditions
+
+```scala
+val forCombinations = for {
+  number <- numbers if number % 2 == 0 //guard to filter even numbers
+  char <- chars
+  animal <- animals
+} yield s"$animal$number$char"
+```
