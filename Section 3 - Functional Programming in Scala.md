@@ -284,3 +284,78 @@ List(("Daniel", 555)).toMap
 val names = List("Bob", "James", "Angela", "Mary", "Daniel", "Jim")
 names.groupBy(name => name.charAt(0)) // crate a map where the key is the first char and the value the elements that start by the key char
 ```
+
+## Options
+
+It's a wrapper for a value that might be present or not (Null)
+
+If has a value is ```Some(value)```, if there's no value is ```None```
+```scala
+val myFirstOption: Option[Int] = Some(5)
+val noOption: Option[Int] = None
+```
+
+Is very useful working with APIs that might return **nulls**. Never do ```Some(possibleNull)```, wrap it with ```Option(possibleNull)```.
+
+Use ```orElse``` to return something else if a None is detected in first case
+```scala
+// WORK with unsafe APIs
+def unsafeMethod(): String = null
+// val result = Some(unsafeMethod()) // WRONG. Some must have a valid value inside, not a null
+// Use Option instead
+val result = Option(unsafeMethod())
+println(result)
+
+def backupMethod(): String = "A valid result"
+val chainedResult = Option(unsafeMethod()).orElse(Option(backupMethod()))
+
+// DESIGN unsafe APIs: return Options where a Null could be found
+def betterUnsafeMethod(): Option[String] = None
+def betterBackupMethod(): Option[String] = Some("A valid result")
+val betterChainedResult = betterUnsafeMethod() orElse betterBackupMethod()
+```
+
+For extracting the value inside an Option, never perform ```Option(possibleNull).get``` because this can make the wrapped
+null appear. Use ```isEmpty``` to check if there's a value and use ```map```, ```filter``` or ```flatMap``` in order to use 
+the wrapped values
+```scala
+// functions on Options
+println(myFirstOption.isEmpty) // isEmpty is good way to test if there's a value or not
+println(myFirstOption.get) // UNSAFE - DO NOT USE THIS: could make the Null appear
+
+// map, flatMap, filter
+println(myFirstOption.map(_ * 2))
+println(myFirstOption.filter(x => x > 10))
+println(myFirstOption.flatMap(x => Option(x * 10)))
+```
+
+Maps has the ```.get``` function that returns an Option with Some(value) if key is found or None otherwise
+```scala
+myMap.get("key") // same as Option(myMap("key"))
+```
+
+Can use chained calls and for-comprehensions to deal with Options:
+```scala
+val myMap: Map[String, String] = Map(
+  // fetched from elsewhere
+  "key1" -> "value1",
+  "key2" -> "value2"
+)
+
+def optionalMethod(x: String, y: String): Option[String] = if (x.size + y.size >= 2) Some(x.concat(y)) else None
+
+// Chained calls
+myMap.get("key1")
+  .flatMap(value1 => myMap.get("key2")
+    .flatMap(value2 => optionalMethod(value1, value2))
+    .map(optionalResult => optionalResult.concat(" returned")))
+  .foreach(println)
+  
+// For-comprehensions
+val result = for {
+  value1 <- myMap.get("key1")
+  value2 <- myMap.get("key2")
+  optionalResult <- optionalMethod(value1, value2)
+} yield optionalResult.concat(" returned")
+result.foreach(println)
+```
