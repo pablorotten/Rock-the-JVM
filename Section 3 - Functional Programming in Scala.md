@@ -223,7 +223,7 @@ val numbersSeq: Seq[Int] = numbers  // implicit conversion
 println(numbersSeq)
 ```
 
-## Vectors
+### Vectors
 
 Default implementation for immutable sequences because is very fast
 * Almost constant indexed, read and write: O(log32(n))
@@ -235,4 +235,52 @@ Default implementation for immutable sequences because is very fast
 val vector: Vector[Int] = Vector(1,2,3)
 // Same opearions as other collections
 
+```
+
+## Tuples and Maps
+
+### Tuples
+
+Are finite ordered lists
+
+```scala
+val aTuple = (2, "hello, Scala")  // Tuple2[Int, String] = (Int, String)
+
+// operaitons
+println(aTuple._1)  // 2
+println(aTuple.copy(_2 = "goodbye Java"))
+println(aTuple.swap)  // ("hello, Scala", 2)
+```
+
+### Maps
+
+```scala
+// Maps - keys -> values
+val aMap: Map[String, Int] = Map()
+
+val phonebook = Map(("Jim", 555), "Daniel" -> 789, ("JIM", 9000)).withDefaultValue(-1)
+// a -> b is sugar for (a, b)
+
+// map ops
+phonebook.contains("Jim")
+phonebook("Mary")
+
+// add a pairing
+val newPairing = "Mary" -> 678
+val newPhonebook = phonebook + newPairing
+
+// functionals on maps
+// map, flatMap, filter
+phonebook.map(pair => pair._1.toLowerCase -> pair._2)
+
+// filterKeys
+phonebook.filterKeys(x => x.startsWith("J"))
+// mapValues
+phonebook.mapValues(number => "0245-" + number)
+
+// conversions to other collections
+phonebook.toList // list of pairs
+List(("Daniel", 555)).toMap
+val names = List("Bob", "James", "Angela", "Mary", "Daniel", "Jim")
+names.groupBy(name => name.charAt(0)) // crate a map where the key is the first char and the value the elements that start by the key char
 ```
