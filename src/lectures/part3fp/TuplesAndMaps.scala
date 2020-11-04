@@ -2,9 +2,6 @@ package lectures.part3fp
 
 import scala.annotation.tailrec
 
-/**
-  * Created by Daniel.
-  */
 object TuplesAndMaps extends App {
 
   // tuples = finite ordered "lists"

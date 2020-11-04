@@ -2,9 +2,6 @@ package lectures.part3fp
 
 import scala.util.{Random, Try, Failure, Success}
 
-/**
-  * Created by Daniel.
-  */
 object HandlingFailure extends App {
 
   // create success and failure
