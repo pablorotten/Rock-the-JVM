@@ -359,3 +359,57 @@ val result = for {
 } yield optionalResult.concat(" returned")
 result.foreach(println)
 ```
+
+## Handling Failure
+
+If some code is error-prone, use Try to wrap it. This will return Success or Failure which behaves in a similar logic as Option.
+
+```scala
+val potentialFailure = Try(unsafeMethod())
+
+val anotherPotentialFailure = Try {
+  // code that might throw
+}
+
+// Option behavior:
+Try(unsafeMethod()).orElse(Try(backupMethod()))
+```
+
+You can create methods that come already wrapped into a Try. If something fails will automatically return a Failure(exception), if not a Success(result):
+```scala
+def betterUnsafeMethod(): Try[String] = Failure(new RuntimeException)
+def betterBackupMethod(): Try[String] = Success("A valid result")
+betterUnsafeMethod() orElse betterBackupMethod()
+```
+
+Working with Try functions. if Success return result, otherwise return empty:
+```scala
+// normal use
+val possibleConnection = HttpService.getSafeConnection(host, port)
+val possibleHTML = possibleConnection.flatMap(connection => connection.getSafe("/home"))
+println(possibleHTML.foreach(renderHTML))
+
+// shorthand version
+HttpService.getSafeConnection(host, port)
+  .flatMap(connection => connection.getSafe("/home"))
+  .foreach(renderHTML)
+
+// for-comprehension version
+for {
+  connection <- HttpService.getSafeConnection(host, port)
+  html <- connection.getSafe("/home")
+} renderHTML(html)
+```
+
+Avoid nested try/catch of Java
+```java
+try {
+  connection = HttpService.getConnection(host, port)
+  try {
+    page = connection.get("/home")
+    renderHTML(page)
+  } catch (some other exception) {
+  }
+} catch (exception) {
+}
+```
