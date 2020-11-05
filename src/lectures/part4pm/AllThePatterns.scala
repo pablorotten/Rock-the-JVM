@@ -1,8 +1,6 @@
 package lectures.part4pm
 
-import exercices.MyList
-import exercices.ConsList
-import exercices.EmptyList
+import exercices.{ConsList, EmptyList, MyList}
 
 object AllThePatterns extends App {
 
